@@ -1,0 +1,108 @@
+.contact-list-container {
+    width: 30%;
+    max-width: 30%;
+    min-height: 100%;
+    border-right: 1px solid #333333;
+    display: flex;
+    flex-direction: column;
+    padding-top: 170px;
+    overflow-y: scroll;
+
+   
+
+    .contact-item {
+        padding: 0 15px;
+        min-height: 75px;
+        width: 100%;
+        display: flex;
+        border-bottom: 1px solid #333333;
+
+        .contact-avatar {
+            display: flex;
+            align-items: center;
+            position: relative;
+            
+            .status-ring{
+                height: 60px;
+                width: 60px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #34C759;
+                img {
+                    margin: 0;
+                    height: 50px;
+                    width: 50px;
+                    border-radius: 50%;
+                }
+            }
+            .no-status{
+                border: none;
+            }
+
+            
+
+            .online-status {
+                // display: none;
+                font-size: 50px;
+                margin: 0;
+                height: fit-content;
+                position: absolute;
+                right: -4px;
+                bottom: -4px;
+                color: #34C759;
+            }
+        }
+
+        .contact-name {
+            padding: 15px 0;
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 60%;
+
+            p {
+                margin: 0;
+            }
+
+            .display-name {
+                font-size: 16px;
+            }
+
+            .last-message {
+                font-size: 14px;
+                color: #8D8D8D;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                /* number of lines to show */
+                -webkit-box-orient: vertical;
+            }
+        }
+
+        .date {
+            padding: 15px 0;
+            margin-left: auto;
+
+            .last-message-date {
+                margin: 0;
+                font-size: 12px;
+                color: #34C759;
+            }
+        }
+    }
+}
+
+@media(max-width: 500px){
+    .contact-list-container{
+        width: 100%;
+        max-width: 100%;
+        padding-top: 100px;
+    }
+    &::-webkit-scrollbar-thumb{
+        background-color: #333333;
+    }
+}

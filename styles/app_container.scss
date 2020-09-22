@@ -1,0 +1,22 @@
+.app-container{
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    box-sizing: border-box;
+    display: flex;
+    color: #FFFFFF;
+}
+
+input{
+    border: none;
+    height: 100%;
+    background: none;
+    &:focus{
+        outline: none;
+        
+    }
+}
+
+
+@import "./contactlist.scss";
+@import "./searchbar.scss";
