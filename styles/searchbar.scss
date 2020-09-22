@@ -1,7 +1,7 @@
 .search-bar-holder{
     min-height: 70px;
     width: 30%;
-    border-bottom: 1px solid #333333;
+    // border-bottom: 1px solid #333333;
     border-right: 1px solid #333333;
     display: flex;
     align-items: center;
@@ -10,8 +10,8 @@
     top: 0;
     z-index: 20;
     padding-top: 70px;
-    padding-bottom: 10px;
-    background-color: #000000;
+    padding-bottom: 20px;
+    background-color: #161616;
 
 
     .search{
