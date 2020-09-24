@@ -1,12 +1,12 @@
 import React from "react";
 import messages from "../../shared-data/contactdetails";
 
-const ContactItem = () => {
+const ContactItem = ({setChatMode}) => {
   const date = new Date();
   const username = "Venaz";
 
   return messages.map((msg) => (
-    <div className="contact-item">
+    <div className="contact-item" onClick={setChatMode}>
       <div className="contact-avatar">
         <div className={`status-ring ${msg.online ? null : "no-status"}`}>
           <img

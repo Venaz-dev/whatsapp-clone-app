@@ -1,13 +1,34 @@
 .contact-list-container {
-    width: 30%;
-    max-width: 30%;
+    width: 100%;
+    max-width: 100%;
     min-height: 100%;
     border-right: 1px solid #333333;
     display: flex;
-    flex-direction: column;
-    padding-top: 140px;
     overflow-y: scroll;
     box-sizing: border-box;
+    position: relative;
+
+    .contact-list{
+        max-width: 30%;
+        border-right: 1px solid #333333;
+        height: inherit;
+        .searchbar-holder{
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+    }
+    .content{
+        z-index: 200;
+        min-width: 70%;
+        position: sticky;
+        top:0;
+        // left: 30%;
+        height: inherit;
+        max-height: 100vh;
+        border-bottom: 1px solid #333333;
+        background: linear-gradient( rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.9) ), url('../public/assets/chat-bg.jpg');
+    }
     
     
 
@@ -15,7 +36,7 @@
 
     .contact-item {
         padding: 0 15px;
-       
+        border-right: 1px solid #333333;
         min-height: 75px;
         width: 100%;
         display: flex;
@@ -58,6 +79,7 @@
                 color: #34C759;
             }
         }
+        
 
         .contact-name {
             padding: 15px 0;
@@ -104,7 +126,19 @@
     .contact-list-container{
         width: 100%;
         max-width: 100%;
-        padding-top: 100px;
+        // padding-top: 70px;
+        .contact-list{
+            width: 100vw;
+            max-width: 100vw;
+            opacity: 1;
+            transition: opacity .2s linear;
+        }
+        .content{
+            position: fixed;
+            width: 100vw;
+            transform: translateX(100vw);
+            transition: transform .2s linear;
+        }
     }
     &::-webkit-scrollbar-thumb{
         background-color: #333333;

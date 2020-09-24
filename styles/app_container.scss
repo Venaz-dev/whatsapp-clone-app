@@ -7,16 +7,44 @@
     color: #FFFFFF;
 }
 
-input{
+input, textarea {
     border: none;
     height: 100%;
-    background: none;
+    background-color: #2C2C2E;
     &:focus{
         outline: none;
         
     }
 }
 
+.input{
+
+    border: none;
+    height: 100%;
+    background-color: #2C2C2E;
+    &:focus{
+        outline: none;
+        
+    }
+}
+
+button{
+    background: none;
+    border: none;
+    cursor: pointer;
+    &:focus{
+        outline: none;
+    }
+}
+
+@media(max-width: 500px){
+    .app-container{
+        // width: fit-content;
+        overflow-x: scroll;
+    }
+}
+
 
 @import "./contactlist.scss";
 @import "./searchbar.scss";
+@import "./chatarea.scss"
