@@ -74,7 +74,7 @@
         min-height: 70px;
         padding: 10px 0;
         position: sticky;
-        top: 100%;
+        top: calc(100vh - 70px);
         border-top: 1px solid #333333;
         display: flex;
         justify-content: center;
