@@ -79,8 +79,10 @@
     .chat-messages {
         width: 100%;
         padding: 50px 100px;
+        height: calc(100vh - 140px);
         @media(max-width: 500px){
             padding: 20px;
+            height: calc(100vh - 140px);
         }
         .message {
             width: fit-content;
@@ -139,7 +141,7 @@
         width: 100%;
         min-height: 70px;
         padding: 10px 0;
-        position: sticky;
+        
         top: 100vh;
         border-top: 1px solid #333333;
         display: flex;
