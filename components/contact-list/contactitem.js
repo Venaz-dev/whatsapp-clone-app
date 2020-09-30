@@ -12,8 +12,8 @@ const ContactItem = ({setChatMode, setActiveChat}) => {
 
   }
 
-  return messages.map((msg) => (
-    <div className="contact-item" onClick={() => handleClick(msg)}>
+  return messages.map((msg, i) => (
+    <div key={i} className="contact-item" onClick={() => handleClick(msg)}>
       <div className="contact-avatar">
         <div className={`status-ring ${msg.online ? null : "no-status"}`}>
           <img

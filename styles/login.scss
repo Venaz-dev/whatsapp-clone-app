@@ -1,0 +1,276 @@
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0px 1000px #181818 inset;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+}
+
+.input-holder {
+    padding-left: 50px;
+    padding-right: 20px;
+    height: fit-content;
+    background-color: #181818;
+    border-radius: 15px;
+    margin: 10px 0;
+}
+
+.register-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000000;
+    .loader {
+        height: 30px;
+        width: 30px;
+        animation-name: spin;
+        animation-duration: 3000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
+}
+
+.image-container {
+    width: 40%;
+    height: 100%;
+}
+
+.image-container img {
+    width: 100%;
+    height: inherit;
+}
+
+.form-container {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../public/assets/auth-assets/circle.png), url(../public/assets/auth-assets/rectangle.png);
+    background-position: 105% 70%, left 30%;
+    background-repeat: no-repeat;
+    background-size: 100px, 150px 50px;
+}
+
+.form-holder {
+    width: 50%;
+    height: auto;
+}
+
+.form-holder h1 {
+    color: #ffffff;
+    font-size: 40px;
+}
+
+.form-holder .socials {
+    width: 100%;
+    display: flex;
+}
+
+.socials button {
+    width: 48%;
+    height: 50px;
+    background: #444444;
+    border: none;
+    border-radius: 15px;
+    color: #ffffff;
+    font-size: 16px;
+    padding-left: 5%;
+    cursor: pointer;
+}
+
+.socials .google {
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 6% 50%;
+    background-image: url(../public/assets/auth-assets/google.png);
+}
+
+.socials .github {
+    margin-left: 4%;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 6% 50%;
+    background-image: url(../public/assets/auth-assets/github.png);
+}
+
+.form-holder p {
+    color: #777777;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.form-holder p::before,
+.form-holder p::after {
+    content: '';
+    border-top: 2px solid #333333;
+    margin: 0 20px 0 0;
+    flex: 1 0 20px;
+}
+
+.form-holder p::after {
+    margin: 0 0 0 20px;
+}
+
+.register-container input {
+    width: 100%;
+    background-color: #181818;
+    height: 50px;
+
+    border: none;
+    padding-left: 10px;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.register-container input:focus {
+    outline: none;
+}
+
+.icon {
+
+    background-size: 15px;
+    background-repeat: no-repeat;
+    background-position: 6% 15px;
+}
+
+.username {
+    background-image: url(../public/assets/auth-assets/user.png);
+}
+
+.username:focus {
+    background-image: url(../public/assets/auth-assets/user-hover.png);
+}
+
+.email {
+    background-image: url(../public/assets/auth-assets/mail.png);
+}
+
+.email:focus {
+    background-image: url(../public/assets/auth-assets/mail-hover.png);
+}
+
+.password {
+    background-image: url(../public/assets/auth-assets/password.png);
+}
+
+.password:focus {
+    background-image: url(../public/assets/auth-assets/password-hover.png);
+}
+
+.passwordConfirmation {
+    background-image: url(../public/assets/auth-assets/password-confirm.png);
+}
+
+.passwordConfirmation:focus {
+    background-image: url(../public/assets/auth-assets/password-confirm-hover.png);
+}
+
+.submit-btn {
+    margin-top: 5%;
+    width: 100%;
+    height: 60px;
+    border-radius: 15px;
+    border: none;
+    font-size: 16px;
+    background-color: #00CC71;
+    cursor: pointer;
+}
+
+button:focus {
+    outline: none;
+}
+
+.form-holder h5 {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 200;
+}
+
+.form-holder b {
+    color: #00CC71;
+    cursor: pointer;
+}
+
+.errors {
+    color: #f31515 !important;
+    font-weight: 400;
+    font-size: 16px;
+    margin-top: 10px !important;
+    text-align: center;
+}
+
+
+
+
+@media only screen and (max-width: 800px) {
+    .image-container {
+        display: none
+    }
+
+    .form-container {
+        width: 100%;
+        background-position: 105% 105%, right 5%;
+        background-repeat: no-repeat;
+        background-size: 70px, 100px 40px;
+
+    }
+
+    .form-holder {
+        width: 90%;
+    }
+
+    .register-container input {
+        height: 50px;
+    }
+
+    .icon {
+        background-size: 20px;
+    }
+
+    .form-holder h5 {
+        font-size: 16px;
+    }
+
+    
+}
+
+@media (max-width: 400px) {
+    .register-container {
+        min-height: 500px;
+
+    }
+
+    .socials .github {
+        margin-left: 4%;
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: 7% 50%;
+
+    }
+
+    .socials .google {
+        margin-left: 4%;
+        background-size: 20px;
+        background-repeat: no-repeat;
+        background-position: 7% 50%;
+
+    }
+}

@@ -5,9 +5,10 @@
     border-right: 1px solid #333333;
     display: flex;
     align-items: center;
-    justify-content: center;
-    position: sticky;
-    top: 0;
+    justify-content: space-between;
+    // position: sticky;
+    padding: 0 10px;
+    top: 70px;
     z-index: 0;
     // padding-top: 70px;
     // padding-bottom: 20px;
@@ -31,16 +32,41 @@
             font-size: 15px;
         }
     }
+    img{
+        width: 20px;
+        cursor: pointer;
+    }
+    .dropdown{
+        width: 150px;
+        
+        border: 1px solid #333333;
+        background: #353538;
+        position: fixed;
+        top: 60px;
+        left: 18%;
+        
+        div{
+            width: 100%;
+            cursor: pointer;
+            padding: 10px;
+        }
+    }
 }
 @media(max-width: 500px){
     .search-bar-holder{
         width: 100%;
         min-height: 50px;
-        padding-top: 30px;
+        padding: 15px 10px;
+
         .search{
             input{
                 height: 35px;
             }
+        }
+
+        .dropdown{
+            left: unset;
+            right: 0;
         }
     }
 }
