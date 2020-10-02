@@ -42,11 +42,12 @@ const Register = ({ login }) => {
     }
   };
 
+
   const saveUser = (createdUser) => {
     return state.usersRef.child(createdUser.user.uid).set({
       name: createdUser.user.displayName,
       avatar: createdUser.user.photoURL,
-    });
+    }, console.log("added user"));
   };
 
   const isFormEmpty = ({ username, email, password, passwordConfirmation }) => {

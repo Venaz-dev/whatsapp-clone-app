@@ -1,7 +1,7 @@
 import React from "react";
 import messages from "../../shared-data/contactdetails";
 
-const ContactItem = ({setChatMode, setActiveChat}) => {
+const ContactItem = ({setChatMode, setActiveChat, convo, user}) => {
   const date = new Date();
   const username = "Venaz";
 
@@ -11,6 +11,16 @@ const ContactItem = ({setChatMode, setActiveChat}) => {
     console.log(msg)
 
   }
+
+  // const getUsername = (details) =>{
+  //   let username = ""
+  //   details.map( det => {
+  //     if(det.id !== user.uid){
+  //       username = det.name
+  //     }
+  //   })
+  //   return username
+  // }
 
   return messages.map((msg, i) => (
     <div key={i} className="contact-item" onClick={() => handleClick(msg)}>
@@ -25,7 +35,7 @@ const ContactItem = ({setChatMode, setActiveChat}) => {
         {msg.online ? <p className="online-status">&bull;</p> : null}
       </div>
       <div className="contact-name">
-        <p className="display-name">{msg.username}</p>
+        {/* <p className="display-name">{getUsername(msg.participants)}</p> */}
         <p className="last-message">
         
           {msg.sender === username ? <>&#x2713; &nbsp;</> : null}
@@ -33,7 +43,7 @@ const ContactItem = ({setChatMode, setActiveChat}) => {
         </p>
       </div>
       <div className="date">
-        <p className="last-message-date">{msg.time}</p>
+        {/* <p className="last-message-date">{msg.time}</p> */}
       </div>
     </div>
   ));

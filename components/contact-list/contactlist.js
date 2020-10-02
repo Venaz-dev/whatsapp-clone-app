@@ -4,30 +4,31 @@ import SearchBar from "./searchbar";
 import ChatArea from "../chatarea/chatarea";
 import useDeviceDetect from "../../services/useDeviceDetect";
 
-import firebase from "../../services/firebase"
+import firebase from "../../services/firebase";
 
-const ContactList = ({ children, closeChat, setLoading }) => {
+export default function ContactList ({ children, closeChat, setLoading, currentUser }) {
   const { isMobile } = useDeviceDetect();
   const chatareaRef = useRef();
   const contactRef = useRef();
 
   const [chatMode, setChatMode] = useState(false);
-  const [user, setUser] = useState(firebase.auth().currentUser)
+  const [user, setUser] = useState(currentUser);
+  const [convo, setConvo] = useState()
 
   const [activeChat, setActiveChat] = useState({
     username: "",
     status: "",
   });
 
-  const signOut = () =>{
+  const signOut = () => {
     firebase
       .auth()
       .signOut()
       .then(() => {
-        console.log("signed out!")
-        setLoading()
+        console.log("signed out!");
+        setLoading();
       });
-  }
+  };
 
   const setChat = (value) => {
     setActiveChat({
@@ -37,6 +38,28 @@ const ContactList = ({ children, closeChat, setLoading }) => {
       sender: value.sender,
     });
   };
+
+  const addConvoListener = () => {
+    
+    let loadedConversations = [];
+    firebase.database().ref("conversations").on("child_added", snap => {
+      snap.val().participants.map( (part) => {
+        // if(part.id === user.uid){
+        //   // loadedConversations.push(snap.val());
+        //   console.log("yello", snap.val())
+        //   // setConvo(loadedConversations)
+        // }
+        
+      })
+      // console.log(snap.val())
+      
+    });
+    console.log(currentUser);
+    // console.log("convo", loadedConversations)
+    // console.log("convostate", convo)
+    
+    
+  }
 
   useEffect(() => {
     if (isMobile) {
@@ -49,31 +72,24 @@ const ContactList = ({ children, closeChat, setLoading }) => {
         contactRef.current.style.opacity = "1";
       }
     }
+    addConvoListener()
+    
+    
   }, [chatMode]);
 
   return (
     <div className="contact-list-container">
       <div className="contact-list" ref={contactRef}>
-        <div className="user-details">
-        <div className="contact-avatar">
-        <div className={`status-ring no-status`}>
-          <img
-            src={user.photoURL}
-            alt="avatar"
-          />
-        </div>
-
-        <p className="online-status">&bull;</p>
-      </div>
-        <p>{user.displayName}</p>
-        </div>
+        
         <div className="searchbar-holder">
-          <SearchBar signOut={signOut}/>
+          <SearchBar signOut={signOut} user={user} />
         </div>
 
         <ContactItem
           setChatMode={() => setChatMode(true)}
           setActiveChat={setChat}
+          convo={convo}
+          user={user}
         />
       </div>
 
@@ -88,4 +104,7 @@ const ContactList = ({ children, closeChat, setLoading }) => {
   );
 };
 
-export default ContactList;
+
+
+// export default ContactList;
+

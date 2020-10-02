@@ -9,19 +9,25 @@ import { useRouter } from 'next/router'
 import Spinner from "../components/spinner/spinner"
 
 
-export default function Home() {
+export default function Home({ data }) {
 
   const router = useRouter();
-
+  const [state, setState] = useState({
+    // convoRef: firebase.database().ref("conversations"),
+  })
+  
   const [currentUser, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [chatModeBack, setChatModeBack] = useState(false);
 
+  
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
         if (user) {
-          console.log(user);
+          console.log(user)
           setUser(user)
+          
           setLoading(false)
           // router.push('/')
           // handleSignout()
@@ -42,10 +48,11 @@ export default function Home() {
   (
     
     <div className="app-container">
-      <ContactList closeChat ={chatModeBack} setLoading={() => setLoading(!loading)}>
+      <ContactList user={currentUser} closeChat ={chatModeBack} setLoading={() => setLoading(!loading)}>
         {/* <ChatArea closeChat={() => setChatModeBack(true)}/> */}
       </ContactList>
       
     </div>
   )
 }
+

@@ -14,16 +14,19 @@
     // padding-bottom: 20px;
     background-color: #161616;
 
-
+    .user-details{
+        border-bottom: unset !important;
+        padding: unset !important;
+    }
     .search{
         display: flex;
         align-items: center;
-        padding: 0 20px;
-        border: 1px solid #333333;
-        width: 90%;
+        // padding: 0 20px;
+        // border: 1px solid #333333;
+        width: fit-content;
         height: 70%;
-        border-radius: 20px;
-        background-color: #2C2C2E;
+        // border-radius: 20px;
+        
         input{
             height: 40px;
             margin-left: 20px;
@@ -56,7 +59,7 @@
     .search-bar-holder{
         width: 100%;
         min-height: 50px;
-        padding: 15px 10px;
+        padding: 0px 10px;
 
         .search{
             input{
