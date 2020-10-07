@@ -6,20 +6,24 @@ import useDeviceDetect from "../../services/useDeviceDetect";
 
 import firebase from "../../services/firebase";
 
-export default function ContactList ({ children, closeChat, setLoading, currentUser }) {
+export default function ContactList ({ children, closeChat, setLoading, currentUser, convo }) {
   const { isMobile } = useDeviceDetect();
   const chatareaRef = useRef();
   const contactRef = useRef();
 
   const [chatMode, setChatMode] = useState(false);
   const [user, setUser] = useState(currentUser);
-  const [convo, setConvo] = useState()
-
+  const [conversation, setConvo] = useState([])
   const [activeChat, setActiveChat] = useState({
     username: "",
     status: "",
   });
+  
 
+  const updateConvo = () =>{
+
+  }
+  
   const signOut = () => {
     firebase
       .auth()
@@ -28,6 +32,7 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
         console.log("signed out!");
         setLoading();
       });
+      
   };
 
   const setChat = (value) => {
@@ -39,27 +44,26 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
     });
   };
 
-  const addConvoListener = () => {
+  // function addConvoListener() {
     
-    let loadedConversations = [];
-    firebase.database().ref("conversations").on("child_added", snap => {
-      snap.val().participants.map( (part) => {
-        // if(part.id === user.uid){
-        //   // loadedConversations.push(snap.val());
-        //   console.log("yello", snap.val())
-        //   // setConvo(loadedConversations)
-        // }
+  //   let loadedConversations = [];
+  //   firebase.database().ref("conversations").on("child_added", snap => {
+  //     snap.val().participants.map( (part) => {
+  //       if(part.id === user.uid){
+  //         loadedConversations.push(snap.val());
+          
+  //       }
         
-      })
-      // console.log(snap.val())
+  //     })
+  //     // console.log(snap.val())
       
-    });
-    console.log(currentUser);
-    // console.log("convo", loadedConversations)
-    // console.log("convostate", convo)
+  //   });
+
+  //   convo = loadedConversations
+  //   setConversation(loadedConversations)
+  //   return convo
     
-    
-  }
+  // }
 
   useEffect(() => {
     if (isMobile) {
@@ -72,23 +76,28 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
         contactRef.current.style.opacity = "1";
       }
     }
-    addConvoListener()
+    setTimeout(() => {
+      // addConvoListener()
+    }, 1000);
     
+    setConvo(convo)
     
   }, [chatMode]);
 
-  return (
+  return  (
     <div className="contact-list-container">
       <div className="contact-list" ref={contactRef}>
         
         <div className="searchbar-holder">
+          {}
           <SearchBar signOut={signOut} user={user} />
         </div>
 
         <ContactItem
           setChatMode={() => setChatMode(true)}
           setActiveChat={setChat}
-          convo={convo}
+          // convo={addConvoListener()}
+          // conversation={conversation}
           user={user}
         />
       </div>

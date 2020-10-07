@@ -1,7 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import messages from "../../shared-data/contactdetails";
 
-const ContactItem = ({setChatMode, setActiveChat, convo, user}) => {
+const ContactItem = ({setChatMode, setActiveChat, convo, conversation, user}) => {
   const date = new Date();
   const username = "Venaz";
 
@@ -12,17 +12,18 @@ const ContactItem = ({setChatMode, setActiveChat, convo, user}) => {
 
   }
 
-  // const getUsername = (details) =>{
-  //   let username = ""
-  //   details.map( det => {
-  //     if(det.id !== user.uid){
-  //       username = det.name
-  //     }
-  //   })
-  //   return username
-  // }
+  const getUsername = (details) =>{
+    let username = ""
+    details.map( det => {
+      if(det.id !== user.uid){
+        username = det.name
+      }
+    })
+    return username
+  }
+  
 
-  return messages.map((msg, i) => (
+  return (messages).map((msg, i) => (
     <div key={i} className="contact-item" onClick={() => handleClick(msg)}>
       <div className="contact-avatar">
         <div className={`status-ring ${msg.online ? null : "no-status"}`}>
