@@ -44,26 +44,7 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
     });
   };
 
-  // function addConvoListener() {
-    
-  //   let loadedConversations = [];
-  //   firebase.database().ref("conversations").on("child_added", snap => {
-  //     snap.val().participants.map( (part) => {
-  //       if(part.id === user.uid){
-  //         loadedConversations.push(snap.val());
-          
-  //       }
-        
-  //     })
-  //     // console.log(snap.val())
-      
-  //   });
-
-  //   convo = loadedConversations
-  //   setConversation(loadedConversations)
-  //   return convo
-    
-  // }
+  
 
   useEffect(() => {
     if (isMobile) {
