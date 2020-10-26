@@ -34,7 +34,7 @@ const Index = (user) => {
       );
     });
     // setUsers(users.filter( (user) => { return user.name.toLowerCase() === search.toLowerCase()}))
-    console.log(users);
+    console.log("users", users);
     setState({ ...state, loading: false });
   };
 
