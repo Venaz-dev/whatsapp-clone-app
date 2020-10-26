@@ -79,6 +79,7 @@
     .chat-messages {
         width: 100%;
         padding: 50px 100px;
+        padding-bottom: 20px;
         height: fit-content;
         max-height: calc(100vh - 100px);
         overflow-y: scroll;
@@ -151,12 +152,16 @@
         width: 100%;
         min-height: 70px;
         padding: 10px 0;
-        position: sticky;
-        top: 100vh;
+        position: fixed;
+        bottom: 0;
+        width: 70%;
         border-top: 1px solid #333333;
         display: flex;
         justify-content: center;
         align-items: center;
+        @media(max-width: 500px) {
+            width: 100%;
+        }
 
         form {
             display: flex;
