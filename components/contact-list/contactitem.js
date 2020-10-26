@@ -6,12 +6,12 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
   const date = new Date();
   const username = "Venaz";
 
-  const [convo, setConvo] = useState();
+  const [convo, setConvo] = useState(null);
 
-  const handleClick = (msg) => {
+  const handleClick = (convo) => {
     setChatMode();
-    setActiveChat(msg);
-    console.log(msg);
+    setActiveChat(getUsername(convo.participants), convo.id);
+    // console.log(convo.id);
   };
 
   function addConvoListener(user) {
@@ -25,10 +25,23 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
             loadedConversations.push(snap.val());
           }
         });
-        // console.log(snap.val())
       });
+      
+    return new Promise ( resolve => {
+      setTimeout(() => {
+        resolve(loadedConversations)
 
-    return loadedConversations;
+      }, 2000)
+    })
+    
+  
+  }
+
+  async function asyncCall(user) {
+    console.log("calling");
+    const result = await addConvoListener(user)
+    console.log("result", result);
+    setConvo(result)
   }
 
   const getUsername = (details) => {
@@ -42,11 +55,12 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
   };
 
   useEffect(() => {
-    setConvo(addConvoListener(user));
-  }, [convo]);
+    asyncCall(user)
+
+  }, []);
 
   return convo ? (
-    messages.map((msg, i) => (
+    convo.map((msg, i) => (
       <div key={i} className="contact-item" onClick={() => handleClick(msg)}>
         <div className="contact-avatar">
           <div className={`status-ring ${msg.online ? null : "no-status"}`}>

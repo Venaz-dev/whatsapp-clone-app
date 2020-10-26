@@ -17,6 +17,7 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
   const [activeChat, setActiveChat] = useState({
     username: "",
     status: "",
+    convoRef: ""
   });
   
 
@@ -32,15 +33,18 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
         console.log("signed out!");
         setLoading();
       });
+    // console.log("sign out");
       
   };
 
-  const setChat = (value) => {
+  const setChat = (value, convoRef) => {
+    // console.log("ref", convoRef);
     setActiveChat({
-      username: value.username,
-      online: value.online,
-      message: value.message,
-      sender: value.sender,
+      username: value,
+      convoRef: convoRef
+      // online: value.online,
+      // message: value.message,
+      // sender: value.sender,
     });
   };
 
@@ -51,7 +55,7 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
       if (chatMode) {
         chatareaRef.current.style.transform = "translateX(0)";
         contactRef.current.style.opacity = "0";
-        console.log(children);
+        // console.log(children);
       } else {
         chatareaRef.current.style.transform = "translateX(100vw)";
         contactRef.current.style.opacity = "1";
@@ -61,9 +65,11 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
       // addConvoListener()
     }, 1000);
     
-    setConvo(convo)
+    // setConvo(convo)
     
   }, [chatMode]);
+
+  
 
   return  (
     <div className="contact-list-container">
@@ -88,6 +94,8 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
         <ChatArea
           closeChat={() => setChatMode(false)}
           activeChat={activeChat}
+          user={user}
+          convoReference={activeChat.convoRef}
         />
       </div>
     </div>

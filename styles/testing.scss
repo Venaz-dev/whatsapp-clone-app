@@ -1,0 +1,270 @@
+.testing {
+    width: 100vw;
+    // height: 100vh;
+    background: #000000;
+
+    .mockups {
+        width: 100%;
+        height: 50vh;
+        background-color: #30033000;
+        position: relative;
+
+        &:hover {
+            div {
+                transform: rotateY(0) rotateX(0);
+
+            }
+
+            .mockup-1 {
+                left: 100px;
+            }
+
+            .mockup-2 {
+                top: 70px
+            }
+
+            .mockup-3 {
+                bottom: 20px;
+                right: 5px;
+            }
+        }
+
+        div {
+            border-radius: 20px;
+            position: absolute;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 20px 40px, rgba(255, 255, 255, 0.2) 0px 0px 0px 0.5px inset;
+            backdrop-filter: blur(10px);
+            transform: rotateY(-20deg) rotateX(20deg);
+            transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+
+
+            &:hover {
+                transform: scale(1.1);
+                z-index: 10;
+            }
+        }
+
+        .mockup-1 {
+            width: 300px;
+            height: 200px;
+            background-color: #63480e;
+
+            top: 30px;
+            left: 250px;
+            background: url(../public/assets/new_wirefram.svg) center no-repeat, radial-gradient(218.51% 281.09% at 100% 100%, rgba(253, 165, 51, 0.6) 0%, rgba(80, 200, 0, 0.226) 45.83%, rgba(90, 200, 0, 0.089) 100%);
+            background-size: 250px 170px;
+
+        }
+
+        .mockup-2 {
+            width: 400px;
+            height: 250px;
+            // background-color: #ecbc53;
+
+            background: url(../public/assets/new_wirefram.svg) center no-repeat;
+            background-size: 350px 230px;
+            border: 2px solid #ffffff;
+
+            top: 50px;
+            left: 450px;
+
+        }
+
+        .mockup-3 {
+            width: 300px;
+            height: 200px;
+            // background-color: #6a8a15;
+            right: 150px;
+            bottom: 70px;
+            background: url(../public/assets/new_wirefram.svg) center no-repeat, radial-gradient(218.51% 281.09% at 100% 100%, rgba(253, 63, 51, 0.6) 0%, rgba(76, 0, 200, 0.6) 45.83%, rgba(77, 0, 200, 0.274) 100%);
+            background-size: 270px 170px;
+
+
+        }
+    }
+
+    .cards {
+        width: 100%;
+        height: 50vh;
+        background-color: #08042b;
+        padding: 20px 50px;
+        display: flex;
+        justify-content: center;
+
+        .card-holder {
+            position: relative;
+            width: fit-content;
+            margin: 0 50px;
+
+            &:hover {
+                .card-back {
+                    transform: rotateY(50deg) rotateX(-30deg);
+                }
+
+                .card-back-2 {
+                    transform: skewY(15deg) rotateX(5deg) rotateY(30deg);
+                }
+
+                .card {
+                    // transform: translateY(-5px)
+                }
+            }
+
+            .card {
+                position: relative;
+                width: 240px;
+                height: 280px;
+                backdrop-filter: blur(40px);
+                z-index: 1;
+                border-radius: 0px 30px 40px 40px;
+
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 40px 80px, rgba(255, 255, 255, 0.15) 0px 0px 0px 0.5px inset;
+                background: rgba(31, 31, 71, 0.6);
+                transition: all 1.8s;
+                padding: 20px;
+                box-sizing: border-box;
+
+                p {
+                    color: #ffffff;
+                    font-size: 20px;
+                    text-align: center;
+                }
+
+                div {
+                    padding: 10px;
+                    // background-color: rgba(255, 255, 255, 0.6);
+                    border-radius: 10px;
+                    // backdrop-filter: blur(4px);
+
+                    p {
+                        background: -webkit-linear-gradient(90deg, hsla(333, 100%, 53%, 1) 0%, hsla(340, 99%, 57%, 1) 0%, hsla(348, 98%, 61%, 1) 30%, hsla(33, 94%, 57%, 1) 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    }
+                }
+
+            }
+
+            .card-back {
+                width: 220px;
+                height: 280px;
+                position: absolute;
+                transform: rotateY(30deg) rotateX(-10deg);
+                background: linear-gradient(rgb(255, 82, 82) 0%, rgb(255, 114, 182) 100%);
+                border-radius: 0px 40px 40px;
+                transform-origin: left top;
+                top: 10px;
+                transition: all 1.8s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+                // animation: flip 10s infinite;
+            }
+
+            .card-2 {
+                position: relative;
+                width: 240px;
+                height: 280px;
+                backdrop-filter: blur(40px);
+                z-index: 1;
+                border-radius: 0px 30px 40px 40px;
+
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 40px 80px, rgba(255, 255, 255, 0.15) 0px 0px 0px 0.5px inset;
+                background: rgba(31, 31, 71, 0.6);
+                transition: all 1.8s;
+
+            }
+
+            .card-back-2 {
+                width: 220px;
+                height: 280px;
+                position: absolute;
+                transform: skewY(8deg);
+                // transform: rotateY(-10deg) rotateX(-10deg);
+                background: linear-gradient(rgb(255, 82, 82) 0%, rgb(255, 114, 182) 100%);
+                border-radius: 0px 40px 40px;
+                transform-origin: left top;
+                top: 0px;
+                transition: all 1.8s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+                // animation: flap 10s infinite;
+            }
+        }
+
+    }
+    .d-cards{
+        width: 100%;
+        height: 50vh;
+        display: flex;
+        justify-content: center;
+        padding: 50px 100px;
+        position: relative;
+        &:hover{
+            .card{
+                transform: rotateY(30deg) skewY(-10deg);
+                opacity: 0.8;
+                backdrop-filter: blur(40px);
+
+            }
+        }
+
+        .card{
+            width: 300px;
+            height: 200px;
+            
+            border-radius: 30px;
+            margin: 0 20px;
+            position: absolute;
+            transition: all .5s cubic-bezier(0.2, 0.8, 0.2, 1) 0s;
+            box-shadow: rgba(39, 77, 153, 0.2) 0px 30px 60px, rgba(0, 0, 0, 0.2) 0px 0px 0px 0.5px inset;
+            &:hover{
+                transform: skewY(0) rotateX(0) translateY(20px);
+                z-index: 50 !important;
+                opacity: 1 !important;
+                
+            }
+            &:first-child{
+                top: 20px;
+                left: 0;
+                z-index: 0;
+                background: radial-gradient(218.51% 281.09% at 100% 100%, rgb(253, 65, 51) 0%, rgb(77, 0, 200) 45.83%, rgb(77, 0, 200) 100%);
+            }
+            &:nth-child(2){
+                top: 50px;
+                left: 150px;
+                z-index: 1;
+                background: radial-gradient(100% 128.38% at 100% 100%, rgb(51, 169, 253) 0%, rgb(77, 0, 200) 100%);
+            }
+            &:nth-child(3){
+                top: 80px;
+                left: 290px;
+                z-index: 2;
+                background: linear-gradient(rgb(117, 224, 230) 0%, rgb(57, 19, 184) 100%);
+            }
+            
+        }
+    }
+}
+
+@keyframes flap {
+    0% {
+        transform: skewY(8deg);
+    }
+
+    50% {
+        transform: skewY(15deg) rotateX(5deg) rotateY(30deg);
+    }
+
+    100% {
+        transform: skewY(8deg);
+    }
+}
+@keyframes flip{
+    0% {
+        transform: rotateY(30deg) rotateX(-10deg);
+    }
+
+    50% {
+        transform: rotateY(50deg) rotateX(-30deg);
+    }
+
+    100% {
+        transform: rotateY(30deg) rotateX(-10deg);
+    }
+}

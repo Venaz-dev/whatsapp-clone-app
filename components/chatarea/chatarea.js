@@ -1,18 +1,105 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Search from "../../public/assets/search";
 import send from "../../public/assets/icons/send_message.svg";
 
-const ChatArea = ({ closeChat, activeChat }) => {
+import firebase from "../../services/firebase";
+import messages from "../../shared-data/contactdetails";
+
+const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
+  const chatRef = useRef()
+  const [messages, setMessage] = useState([]);
+  const [state, setState] = useState({
+    messagesRef: firebase.database().ref("messages"),
+    messagesLoading: true,
+    message: "",
+    errors: [],
+  });
   const username = "Venaz";
-  const [message, setMessage] = useState("");
+
+  const scrollBottom = () => {
+    let chatDiv = chatRef.current
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+  }
+
+  const addMessageListener = (convoReference) => {
+    let loadedMessages = [];
+    state.messagesRef.child(convoReference).on("child_added", (snap) => {
+      loadedMessages.push(snap.val());
+    });
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(loadedMessages);
+      }, 500);
+    });
+  };
+
+  async function getMessages() {
+    console.log("calling");
+    const result = await addMessageListener(convoReference);
+    console.log("result", result);
+    setMessage(result);
+    scrollBottom()
+  }
 
   const handleChange = (event) => {
-    setMessage(event.target.value);
+    setState({
+      ...state,
+      message: event.target.value,
+    });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    // console.log("message", state.message, convoRef, user.displayName);
+    sendMessage();
   };
+
+  const createMessage = () => {
+    const message = {
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      user: {
+        id: user.uid,
+        name: user.displayName,
+        avatar: user.photoURL,
+      },
+      message: state.message,
+    };
+    return message;
+  };
+  const sendMessage = () => {
+    const { message, messagesRef } = state;
+
+    if (message) {
+      // this.setState({ loading: true });
+      messagesRef
+        .child(convoReference)
+        .push()
+        .set(createMessage())
+        .then(() => {
+          setState({ ...state, message: "", errors: [] });
+          console.log("sent");
+          scrollBottom()
+        })
+        .catch((err) => {
+          console.error(err);
+          setState({ ...state, errors: state.errors.concat(err) });
+        });
+    } else {
+      setState({
+        ...state,
+        errors: state.errors.concat({ message: "Add a message" }),
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (convoReference) {
+      setMessage([])
+      getMessages();
+      
+    }
+  }, [convoReference]);
   return (
     <div className="chat-area-container">
       <div className="chat-area-header">
@@ -48,18 +135,31 @@ const ChatArea = ({ closeChat, activeChat }) => {
           </div>
         </div>
       </div>
-      
+
       {/* container for the messages */}
-      <div className="chat-messages">
-              <p className={activeChat.sender === username ? "message sent" : "message recieve"}>{activeChat.message}</p>
+      <div className="chat-messages" ref={chatRef}>
+        {
+          
+          messages.map((msg, i) => (
+            <div  key={i} className="message-holder">
+              <p
+                className={
+                  msg.user.id === user.uid ? "message" : "message recieve"
+                }
+              >
+                {msg.message}
+              </p>
+            </div>
+          ))
+        }
       </div>
 
       <div className="chat-area-type">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <input
             type="text"
             name="message"
-            value={message}
+            value={state.message}
             onChange={handleChange}
             placeholder="Type a message"
           />
@@ -69,7 +169,7 @@ const ChatArea = ({ closeChat, activeChat }) => {
           <button
             className="send-btn"
             onClick={() => console.log("hello")}
-            disabled={message === ""}
+            disabled={state.message === ""}
           >
             <img src={send} />
           </button>

@@ -79,10 +79,19 @@
     .chat-messages {
         width: 100%;
         padding: 50px 100px;
+        height: fit-content;
+        max-height: calc(100vh - 100px);
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
         
         @media(max-width: 500px){
             padding: 20px;
             height: calc(100vh - 140px);
+        }
+        .message-holder{
+            width: 100%;
+            height: fit-content;
         }
         .message {
             width: fit-content;
@@ -91,10 +100,11 @@
             min-height: 46px;
             background-color: #1f8539;
             border-radius: 5px;
-            float: left;
+            float: right;
             position: relative;
             display: flex;
             align-items: center;
+            margin-bottom: 0;
             
 
             // &::before {
@@ -115,8 +125,8 @@
                 position: absolute;
                 width: 0;
                 height: 0;
-                left: -10px;
-                right: auto;
+                right: -10px;
+                left: auto;
                 top: 0px;
                 bottom: auto;
                 border: 15px solid;
@@ -126,10 +136,10 @@
         
         .recieve {
             background-color: #333333;
-            float: right;
+            float: left;
             &::after {
-                left: auto;
-                right: -10px;
+                right: auto;
+                left: -10px;
                 border-color: #333333 transparent transparent transparent;
             }
         }
