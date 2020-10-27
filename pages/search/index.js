@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import firebase from "../../services/firebase";
 import { useRouter } from "next/router";
-import Link from 'next/link'
+import Link from "next/link";
 
 const Index = (user) => {
   const router = useRouter();
   const [state, setState] = useState({
     loading: false,
-    convoRef: '',
+    convoRef: "",
+    error: "Enter a Username to search"
   });
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
@@ -18,11 +19,6 @@ const Index = (user) => {
   };
 
   const searchUsers = () => {
-    // let loadedChannels = [];
-    // this.state.channelsRef.on("child_added", snap => {
-    //   loadedChannels.push(snap.val());
-    //   this.setState({ channels: loadedChannels }, () => this.setFirstChannel());
-    // });
     setState({ ...state, loading: true });
     let loadedUsers = [];
     usersRef.on("child_added", (snap) => {
@@ -33,42 +29,14 @@ const Index = (user) => {
         })
       );
     });
-    // setUsers(users.filter( (user) => { return user.name.toLowerCase() === search.toLowerCase()}))
-    console.log("users", users);
+    // console.log("users", users);
     setState({ ...state, loading: false });
   };
 
   const addConversation = (party) => {
-    // addChannel = () => {
-    //   const { channelsRef, channelName, channelDetails, user } = this.state;
-
-    //   const key = channelsRef.push().key;
-
-    //   const newChannel = {
-    //     id: key,
-    //     name: channelName,
-    //     details: channelDetails,
-    //     createdBy: {
-    //       name: user.displayName,
-    //       avatar: user.photoURL
-    //     }
-    //   };
-
-    //   channelsRef
-    //     .child(key)
-    //     .update(newChannel)
-    //     .then(() => {
-    //       this.setState({ channelName: "", channelDetails: "" });
-    //       this.closeModal();
-    //       console.log("channel added");
-    //     })
-    //     .catch(err => {
-    //       console.error(err);
-    //     });
-    // };
     const currentUser = firebase.auth().currentUser;
     const key = currentUser.uid + "-" + party.id;
-    console.log(key);
+    // console.log(key);
 
     const newConvo = {
       id: key,
@@ -87,29 +55,35 @@ const Index = (user) => {
     };
 
     state.convoRef
-          .child(key)
-          .update(newConvo)
-          .then(() => console.log('convo added'))
-          .catch(err => {
-            console.error(err)
-          })
+      .child(key)
+      .update(newConvo)
+      .then(() => console.log("convo added"))
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const ErrorMsg = () => {
+    return (
+      <div>
+        {search === "" ? (
+          <h4>Enter a Username to search</h4>
+        ) : (
+          <h4> No users with this Username</h4>
+        )}
+      </div>
+    );
   };
 
   useEffect(() => {
-
-    setState({ ...state, convoRef: firebase.database().ref("conversations")})
-    setUsersRef(firebase.database().ref("users"))
-
-  }, [])
+    setState({ ...state, convoRef: firebase.database().ref("conversations") });
+    setUsersRef(firebase.database().ref("users"));
+  }, []);
 
   return (
     <div className="search-area">
       <Link href="/">
-      <span
-        className="close"
-      >
-        [X]Close
-      </span>
+        <span className="close">[X]Close</span>
       </Link>
       <div className="search-input">
         <input
@@ -130,23 +104,26 @@ const Index = (user) => {
         </button>
       </div>
       <div className="search-result">
-        {users.length > 0 ? (
-          users.map((user, i) => (
-            <div key={i} className="search-item">
-              <div className="user-details">
-                <div className="contact-avatar">
-                  <div className={`status-ring no-status`}>
-                    <img src={user.avatar} alt="avatar" />
+        {users.length > 0
+          ? users.map((user, i) => (
+              <div key={i} className="search-item">
+                <div className="user-details">
+                  <div className="contact-avatar">
+                    <div className={`status-ring no-status`}>
+                      <img src={user.avatar} alt="avatar" />
+                    </div>
                   </div>
                 </div>
+                <p>{user.name}</p>
+                <button
+                  style={{ marginLeft: "auto" }}
+                  onClick={() => addConversation(user)}
+                >
+                  Start chat
+                </button>
               </div>
-              <p>{user.name}</p>
-              <button onClick={() => addConversation(user)}>Start chat</button>
-            </div>
-          ))
-        ) : (
-          <h4> No users with this Username</h4>
-        )}
+            ))
+          : ErrorMsg()}
       </div>
     </div>
   );

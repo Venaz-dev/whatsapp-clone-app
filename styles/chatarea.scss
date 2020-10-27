@@ -79,7 +79,7 @@
     .chat-messages {
         width: 100%;
         padding: 50px 100px;
-        padding-bottom: 20px;
+        padding-bottom: 100px;
         height: fit-content;
         max-height: calc(100vh - 100px);
         overflow-y: scroll;
@@ -93,20 +93,24 @@
         .message-holder{
             width: 100%;
             height: fit-content;
+            // position: relative;
         }
         .message {
             width: fit-content;
+            min-width: 100px;
             max-width: 75%;
             padding: 10px 15px;
+            padding-bottom: 20px;
             min-height: 46px;
-            background-color: #1f8539;
+            background-color: #155c27;
+            // border-radius: 5px;
             border-radius: 5px;
             float: right;
             position: relative;
             display: flex;
             align-items: center;
-            margin-bottom: 0;
-            
+            margin-top: 16px;
+            line-height: 20px;
 
             // &::before {
             //     content: ' ';
@@ -131,7 +135,7 @@
                 top: 0px;
                 bottom: auto;
                 border: 15px solid;
-                border-color: #1f8539 transparent transparent transparent;
+                border-color: #155c27 transparent transparent transparent;
             }
         }
         

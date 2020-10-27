@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Search from "../../public/assets/search";
 import { Dropdown } from "semantic-ui-react";
-import { useRouter } from 'next/router'
-import Link from "next/link"
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const SearchBar = ({ signOut, user }) => {
-    const router = useRouter()
+  const router = useRouter();
   const [drop, setDrop] = useState(false);
   const dropdownOptions = () => [
     {
@@ -17,24 +17,33 @@ const SearchBar = ({ signOut, user }) => {
       ),
     },
   ];
+  
   return (
     <div className="search-bar-holder">
-        <div className="user-details">
-          <div className="contact-avatar">
-            <div className={`status-ring no-status`}>
-              <img src={user && user.photoURL} alt="avatar" />
-            </div>
-
-            <p className="online-status">&bull;</p>
+      <div className="user-details">
+        <div className="contact-avatar">
+          <div className={`status-ring no-status`}>
+            <img
+              
+              src={
+                user.photoURL != null
+                  ? user.photoURL
+                  : require("../../public/assets/new_profile.png")
+              }
+              alt="avatar"
+            />
           </div>
-          <p>{user && user.displayName}</p>
+
+          <p className="online-status">&bull;</p>
         </div>
-        
-      <Link href="/search">
-      <div className="search">
-      <Search color="#ffffff" />
-        {/* <input type="text" placeholder="Search or start a new chat" /> */}
+        <p>{user.displayName}</p>
       </div>
+
+      <Link href="/search">
+        <div className="search">
+          <Search color="#ffffff" />
+          {/* <input type="text" placeholder="Search or start a new chat" /> */}
+        </div>
       </Link>
       <div onClick={() => setDrop(!drop)}>
         <img src={require("../../public/assets/icons/dot_menu.svg")} />

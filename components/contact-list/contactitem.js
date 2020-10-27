@@ -10,7 +10,7 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
 
   const handleClick = (convo) => {
     setChatMode();
-    setActiveChat(getUsername(convo.participants), convo.id);
+    setActiveChat(getUsername(convo.participants), convo.id, getAvatar(convo.participants));  
     // console.log(convo.id);
   };
 
@@ -38,9 +38,9 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
   }
 
   async function asyncCall(user) {
-    console.log("calling");
+    // console.log("calling");
     const result = await addConvoListener(user)
-    console.log("result", result);
+    // console.log("result", result);
     setConvo(result)
   }
 
@@ -54,6 +54,18 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
     return username;
   };
 
+  const getAvatar = (details) => {
+    let avatar
+    details.map((det) => {
+      if (det.id !== user.uid) {
+        avatar = det.avatar;
+      }
+    });
+    return avatar
+  }
+
+  
+
   useEffect(() => {
     asyncCall(user)
 
@@ -65,7 +77,7 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
         <div className="contact-avatar">
           <div className={`status-ring ${msg.online ? null : "no-status"}`}>
             <img
-              src={require("../../public/assets/review_02.png")}
+              src={getAvatar(msg.participants)}
               alt="avatar"
             />
           </div>

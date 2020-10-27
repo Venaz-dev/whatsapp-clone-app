@@ -5,8 +5,10 @@ import send from "../../public/assets/icons/send_message.svg";
 import firebase from "../../services/firebase";
 import messages from "../../shared-data/contactdetails";
 
+import TimeFormat from "../timeformat/timeformat";
+
 const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
-  const chatRef = useRef()
+  const chatRef = useRef();
   const [messages, setMessage] = useState([]);
   const [state, setState] = useState({
     messagesRef: firebase.database().ref("messages"),
@@ -17,9 +19,9 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
   const username = "Venaz";
 
   const scrollBottom = () => {
-    let chatDiv = chatRef.current
+    let chatDiv = chatRef.current;
     chatDiv.scrollTop = chatDiv.scrollHeight;
-  }
+  };
 
   const addMessageListener = (convoReference) => {
     let loadedMessages = [];
@@ -35,11 +37,14 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
   };
 
   async function getMessages() {
-    console.log("calling");
+    // console.log("calling");
+    state.messagesRef.child(convoReference).on("child_added", async () => {
     const result = await addMessageListener(convoReference);
-    console.log("result", result);
     setMessage(result);
     scrollBottom()
+    })
+    // console.log("result", result);
+    scrollBottom();
   }
 
   const handleChange = (event) => {
@@ -78,8 +83,8 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
         .set(createMessage())
         .then(() => {
           setState({ ...state, message: "", errors: [] });
-          console.log("sent");
-          scrollBottom()
+          // console.log("sent");
+          scrollBottom();
         })
         .catch((err) => {
           console.error(err);
@@ -95,9 +100,12 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
 
   useEffect(() => {
     if (convoReference) {
-      setMessage([])
+      setMessage([]);
       getMessages();
-      
+      setState({
+        ...state,
+        message: "",
+      });
     }
   }, [convoReference]);
   return (
@@ -114,10 +122,10 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
                   width={20}
                 />
               </button>
-              <img
-                src={require("../../public/assets/review_02.png")}
-                alt="avatar"
-              />
+              {activeChat.avatar != "" && (
+                <img src={activeChat.avatar} alt="avatar" />
+              )}
+
               {activeChat.online ? (
                 <p className="online-status">&bull;</p>
               ) : null}
@@ -138,43 +146,43 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
 
       {/* container for the messages */}
       <div className="chat-messages" ref={chatRef}>
-        {
-          
-          messages.map((msg, i) => (
-            <div  key={i} className="message-holder">
-              <p
+        {messages.map((msg, i) => {
+          let day = new Date(msg.timestamp + 1000);
+
+          return (
+            <div key={i} className="message-holder">
+              <div
                 className={
                   msg.user.id === user.uid ? "message" : "message recieve"
                 }
               >
                 {msg.message}
-              </p>
+                <TimeFormat time={day} />
+              </div>
             </div>
-          ))
-        }
+          );
+        })}
       </div>
 
-      <div className="chat-area-type">
-        <form onSubmit={handleSubmit} autoComplete="off">
-          <input
-            type="text"
-            name="message"
-            value={state.message}
-            onChange={handleChange}
-            placeholder="Type a message"
-          />
-          {/* <span className="input" contentEditable={true} value={message} onChange={handleChange}
+      {activeChat.username != "" && (
+        <div className="chat-area-type">
+          <form onSubmit={handleSubmit} autoComplete="off">
+            <input
+              type="text"
+              name="message"
+              value={state.message}
+              onChange={handleChange}
+              placeholder="Type a message"
+            />
+            {/* <span className="input" contentEditable={true} value={message} onChange={handleChange}
         ></span> */}
 
-          <button
-            className="send-btn"
-            onClick={() => console.log("hello")}
-            disabled={state.message === ""}
-          >
-            <img src={send} />
-          </button>
-        </form>
-      </div>
+            <button className="send-btn" disabled={state.message === ""}>
+              <img src={send} />
+            </button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

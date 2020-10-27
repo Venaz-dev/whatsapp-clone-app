@@ -17,7 +17,8 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
   const [activeChat, setActiveChat] = useState({
     username: "",
     status: "",
-    convoRef: ""
+    convoRef: "",
+    avatar: ""
   });
   
 
@@ -37,11 +38,12 @@ export default function ContactList ({ children, closeChat, setLoading, currentU
       
   };
 
-  const setChat = (value, convoRef) => {
+  const setChat = (value, convoRef, avatar) => {
     // console.log("ref", convoRef);
     setActiveChat({
       username: value,
-      convoRef: convoRef
+      convoRef: convoRef,
+      avatar: avatar
       // online: value.online,
       // message: value.message,
       // sender: value.sender,

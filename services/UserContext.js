@@ -14,10 +14,10 @@ const UserProvider = ({ children }) => {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        console.log("User logged in.");
+        // console.log("User logged in.");
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 

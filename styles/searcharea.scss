@@ -66,12 +66,24 @@
         .search-item{
             width: 100%;
             display: flex;
+            align-items: center;
             background-color: #161616;
             margin: 10px 0;
-            padding: 10px;
+            padding: 10px 50px;
             border-radius: 10px;
             p{
+                text-transform: capitalize;
                 margin-left: 20px;
+            }
+            button{
+                margin-left: auto;
+                border: 2px solid #2c2c2e;
+                padding:10px;
+                border-radius: 0 15px 0 15px;
+                height: fit-content;
+                &:hover{
+                    background-color: #2c2c2e;
+                }
             }
         }
     }

@@ -39,8 +39,8 @@ export default function Home({ data }) {
         snap.val().participants.map((part) => {
           if (part.id === user.uid) {
             loadedConversations.push(snap.val());
-            setState({...state, value: !state.value}, () => console.log("working"))
-            console.log("hmmm", loadedConversations);
+            // setState({...state, value: !state.value}, () => console.log("working"))
+            // console.log("hmmm", loadedConversations);
           }
         });
         
@@ -57,7 +57,7 @@ export default function Home({ data }) {
         setCurrentUser(user);
         // addConvoListener(user, setConvo);
         
-        console.log("user", currentUser);
+        // console.log("user", currentUser);
         setLoad(false);
         // router.push('/')
         // handleSignout()

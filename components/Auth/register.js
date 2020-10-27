@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import firebase from "../../services/firebase"
+import firebase from "../../services/firebase";
+
 
 const Register = ({ login }) => {
+  const storage = firebase.storage()
+  let profilePath = storage.refFromURL('https://firebasestorage.googleapis.com/v0/b/dev-chat-9be95.appspot.com/o/new_profile.png?alt=media&token=5e614ba2-60d2-44d9-9678-c6b3125b128b');
+
   const [state, setState] = useState({
     username: "",
     email: "",
@@ -31,23 +35,27 @@ const Register = ({ login }) => {
     } else if (!isPasswordValid(state)) {
       error = { message: "Password is invalid! Must be at least 6 Characters" };
       setState({ ...state, errors: errors.concat(error) });
-      return false;}
+      return false;
+    }
     // } else if (!this.isPasswordMatch(this.state)) {
     //   error = { message: "Password does not match!" };
     //   this.setState({ errors: errors.concat(error) });
     //   return false;
-    // } 
+    // }
     else {
       return true;
     }
   };
 
-
   const saveUser = (createdUser) => {
-    return state.usersRef.child(createdUser.user.uid).set({
-      name: createdUser.user.displayName,
-      avatar: createdUser.user.photoURL,
-    }, console.log("added user"));
+    return state.usersRef.child(createdUser.user.uid).set(
+      {
+        name: createdUser.user.displayName,
+        avatar: createdUser.user.photoURL,
+        id: createdUser.user.uid
+      },
+      console.log("added user")
+    );
   };
 
   const isFormEmpty = ({ username, email, password, passwordConfirmation }) => {
@@ -67,11 +75,11 @@ const Register = ({ login }) => {
     }
   };
 
-//   const isPasswordMatch = ({ password, passwordConfirmation }) => {
-//     if (password !== passwordConfirmation) {
-//       return false;
-//     }
-//   };
+  //   const isPasswordMatch = ({ password, passwordConfirmation }) => {
+  //     if (password !== passwordConfirmation) {
+  //       return false;
+  //     }
+  //   };
 
   const displayErrors = (errors) =>
     errors.map((error, i) => (
@@ -79,7 +87,6 @@ const Register = ({ login }) => {
         {error.message}
       </h4>
     ));
-
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -90,13 +97,13 @@ const Register = ({ login }) => {
         .auth()
         .createUserWithEmailAndPassword(state.email, state.password)
         .then((createdUser) => {
-          console.log(createdUser);
           createdUser.user
             .updateProfile({
               displayName: state.username,
-              photoURL: `${require('../../public/assets/new_profile.png')}`,
+              photoURL: `https://firebasestorage.googleapis.com/v0/b/dev-chat-9be95.appspot.com/o/new_profile.png?alt=media&token=5e614ba2-60d2-44d9-9678-c6b3125b128b`,
             })
             .then(() => {
+              console.log("updateduser", createdUser.displayName);
               saveUser(createdUser).then(() => {
                 console.log("user saved");
               });
@@ -104,7 +111,7 @@ const Register = ({ login }) => {
             .catch((err) => {
               console.error(err);
               setState({
-                  ...state,
+                ...state,
                 errors: state.errors.concat(err),
                 loading: false,
               });
@@ -144,7 +151,7 @@ const Register = ({ login }) => {
                 name="username"
                 placeholder="Username"
                 onChange={handleChange}
-                value={state.username}
+                value={state.username}  
               />
             </div>
             <div className="input-holder email icon">
@@ -162,7 +169,6 @@ const Register = ({ login }) => {
                 type="password"
                 name="password"
                 placeholder="Password"
-                
                 onChange={handleChange}
                 value={state.password}
               />
@@ -172,12 +178,13 @@ const Register = ({ login }) => {
                 type="password"
                 name="passwordConfirmation"
                 placeholder="Confirm Password"
-                
                 onChange={handleChange}
                 value={state.passwordConfirmation}
               />
             </div>
-            {state.errors.length > 0 && <div>{displayErrors(state.errors)}</div>}
+            {state.errors.length > 0 && (
+              <div>{displayErrors(state.errors)}</div>
+            )}
 
             <button disabled={state.loading} className="submit-btn">
               Register

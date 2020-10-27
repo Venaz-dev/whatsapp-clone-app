@@ -54,8 +54,9 @@ const Login = ({ signup }) => {
         .auth()
         .signInWithEmailAndPassword(state.email, state.password)
         .then((signedInUser) => {
-          console.log(signedInUser);
+          // console.log(signedInUser);
           setUser(firebase.auth().currentUser);
+          router.push("/")
         })
         .catch((err) => {
           console.error(err);
@@ -71,20 +72,12 @@ const Login = ({ signup }) => {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log(user);
         router.push("/");
-        //   handleSignout()
-        //   this.props.setUser(user);
-        //   this.props.history.push("/");
-      } else {
-        //   this.props.history.push("/login");
-        //   this.props.clearUser();
-      }
+        
+      } 
     });
-    // if (user) {
-    //   router.push('/')
-    // }
-  });
+    
+  }, []);
   return (
     <div className="register-container">
       <div className="image-container">
