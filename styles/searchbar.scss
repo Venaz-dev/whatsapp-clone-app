@@ -26,7 +26,11 @@
         width: fit-content;
         height: 70%;
         // border-radius: 20px;
-        
+        img{
+            height: 40px;
+            width: 40px;
+            opacity: 0.7;
+        }
         input{
             height: 40px;
             margin-left: 20px;
@@ -46,12 +50,22 @@
         background: #353538;
         position: fixed;
         top: 60px;
-        left: 18%;
+        left: 10px;
+        box-shadow: 0px 5px 20px #00000029;
+        border-radius: 10px;
+        padding: 20px;
+        z-index: 100;
         
         div{
             width: 100%;
             cursor: pointer;
             padding: 10px;
+            border-bottom: 2px solid #ffffff;
+            margin-bottom: 10px;
+            border-radius: 10px 10px 0 0;
+            &:hover{
+                background-color: darken($color: #353538, $amount: 10);
+            }
         }
     }
 }
@@ -68,8 +82,8 @@
         }
 
         .dropdown{
-            left: unset;
-            right: 0;
+            
+            left: 0;
         }
     }
 }

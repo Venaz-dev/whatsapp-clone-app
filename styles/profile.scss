@@ -1,0 +1,102 @@
+.profile-holder{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+   
+    div{
+        display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    @media(max-width: 500px){
+        width: 100%;
+
+    }
+    @media(max-width: 900px){
+        width: 80%;
+        
+    }
+    @media(min-width: 1000px){
+        width: 70%;
+        
+    }
+        .title{
+            padding: 10px;
+            border-bottom: 3px solid $primary;
+            width: 60%;
+            @media(max-width: 500px){
+                width: 100%;
+                
+            }
+        }
+        h2{
+            margin-bottom: 50px;
+        }
+        
+        img{
+            height: 25vh;
+            width: 25vh;
+            margin: 20px 0;
+            border-radius: 50%;
+            right: 10px;
+            object-fit: cover;
+            object-position: top;
+        }
+        .add-icon{
+            position: absolute;
+            height: 30px ;
+            width: 30px;
+            bottom: 10px;
+            background-color: #fff;
+        }
+        p{
+            margin-bottom: 0;
+            font-size: 18px;
+        }
+        input{
+            height: fit-content;
+            margin: 20px 0;
+            font-size: 20px;
+            color: #fff;
+            padding: 10px;
+            width: 60%;
+            border-radius: 10px;
+            border: 2px solid #2c2c2e;
+            text-align: center;
+            @media(max-width: 500px){
+                width: 90%;
+                
+            }
+        }
+        .btn-holder{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        button{
+            width: 60%;
+            background-color: $primary;
+            color: #fff;
+            font-size: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            @media(max-width: 500px){
+                width: 90%;
+                
+            }
+            &:hover{
+                background-color: darken($color: $primary, $amount: 35);
+            }
+            &:focus{
+                background-color: darken($color: $primary, $amount: 35);
+            }
+
+    
+        }
+    }
+}

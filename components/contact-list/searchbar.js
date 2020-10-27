@@ -17,14 +17,13 @@ const SearchBar = ({ signOut, user }) => {
       ),
     },
   ];
-  
+
   return (
     <div className="search-bar-holder">
       <div className="user-details">
-        <div className="contact-avatar">
+        <div className="contact-avatar" onClick={() => setDrop(!drop)}>
           <div className={`status-ring no-status`}>
             <img
-              
               src={
                 user.photoURL != null
                   ? user.photoURL
@@ -41,15 +40,16 @@ const SearchBar = ({ signOut, user }) => {
 
       <Link href="/search">
         <div className="search">
-          <Search color="#ffffff" />
+          <img src={require("../../public/assets/icons/add-chat.svg")} />
           {/* <input type="text" placeholder="Search or start a new chat" /> */}
         </div>
       </Link>
-      <div onClick={() => setDrop(!drop)}>
-        <img src={require("../../public/assets/icons/dot_menu.svg")} />
-      </div>
+
       {drop ? (
         <div className="dropdown">
+          <Link href="/profile">
+            <div>Profile</div>
+          </Link>
           <div onClick={signOut}>Sign Out</div>
         </div>
       ) : null}

@@ -1,3 +1,8 @@
+body{
+    background-color: black;
+    color: #FFFFFF;
+}
+
 .app-container {
     width: 100%;
     height: 100vh;
@@ -86,3 +91,4 @@ $primary: #34C759;
 @import "./login.scss";
 @import "./searcharea.scss";
 @import "./testing.scss";
+@import "./profile.scss";

@@ -71,6 +71,9 @@
             margin: 10px 0;
             padding: 10px 50px;
             border-radius: 10px;
+            @media(max-width: 500px){
+                padding: 10px;
+            }
             p{
                 text-transform: capitalize;
                 margin-left: 20px;

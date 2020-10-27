@@ -57,7 +57,10 @@ const Index = (user) => {
     state.convoRef
       .child(key)
       .update(newConvo)
-      .then(() => console.log("convo added"))
+      .then(() => {
+        console.log("convo added")
+        router.push("/")
+      })
       .catch((err) => {
         console.error(err);
       });
@@ -66,11 +69,9 @@ const Index = (user) => {
   const ErrorMsg = () => {
     return (
       <div>
-        {search === "" ? (
+        
           <h4>Enter a Username to search</h4>
-        ) : (
-          <h4> No users with this Username</h4>
-        )}
+       
       </div>
     );
   };
@@ -104,8 +105,9 @@ const Index = (user) => {
         </button>
       </div>
       <div className="search-result">
-        {users.length > 0
-          ? users.map((user, i) => (
+        {search != ""
+          ? 
+          users.map((user, i) => (
               <div key={i} className="search-item">
                 <div className="user-details">
                   <div className="contact-avatar">
