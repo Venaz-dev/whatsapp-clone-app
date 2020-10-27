@@ -5,7 +5,9 @@ import firebase from "../../services/firebase";
 const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
   const date = new Date();
   const username = "Venaz";
-
+  const [state, setState] = useState({
+    messagesRef: firebase.database().ref("messages"),
+  })
   const [convo, setConvo] = useState(null);
 
   const handleClick = (convo) => {
@@ -72,7 +74,20 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
   }, []);
 
   return convo ? (
-    convo.map((msg, i) => (
+    convo.map((msg, i) => {
+      // let length
+      // let messages = []
+      // state.messagesRef.child(msg.id).once("value", (snap) => {
+      //   console.log(`there are ${snap.numChildren()} messages`)
+      //   length = snap.numChildren()
+      // }); 
+      // state.messagesRef.child(msg.id).on("child_added", (snap) => {
+      //   messages.push(snap.val())
+      //   if(messages.length > length){
+      //   console.log(`new message from ${getUsername(msg.participants)}`)
+      //   }
+      // }); 
+      return(
       <div key={i} className="contact-item" onClick={() => handleClick(msg)}>
         <div className="contact-avatar">
           <div className={`status-ring ${msg.online ? null : "no-status"}`}>
@@ -86,18 +101,18 @@ const ContactItem = ({ setChatMode, setActiveChat, conversation, user }) => {
         </div>
         <div className="contact-name">
           <p className="display-name">{getUsername(msg.participants)}</p>
-          <p className="last-message">
+          {/* <p className="last-message">
             {msg.sender === username ? <>&#x2713; &nbsp;</> : null}
             {msg.message}
-          </p>
+          </p> */}
         </div>
         <div className="date">
           {/* <p className="last-message-date">{msg.time}</p> */}
         </div>
       </div>
-    ))
+    )})
   ) : (
-    <div className="contact-item">
+    <div className="contact-item">  
       <div className="contact-loading">
         <span></span>
         <span></span>

@@ -35,8 +35,8 @@ const TimeFormat = ({ time }) => {
         fontSize: "11px",
         color: "#999",
         position: "absolute",
-        bottom: "5px",
-        right: "15px",
+        bottom: "0",
+        right: "10px",
       }}
     >
       {day != today ? (
