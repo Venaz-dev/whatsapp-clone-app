@@ -56,6 +56,13 @@ const Index = () => {
           })
           
         })
+        .then(() => {
+          console.log("redirect");
+          setTimeout(() => {
+            router.push("/")
+          }, 3000);
+          
+        })
         .catch(err => {
           console.error(err);
         })
