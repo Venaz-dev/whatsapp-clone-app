@@ -4,11 +4,17 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Index = () => {
-  const storageRef = firebase.storage().ref(user + '/profilePicture/');
+  // const storageRef = firebase.storage().ref() || "";
   const [user, setUser] = useState();
   const [state, setState] = useState({
     displayName: "",
+    file: "",
     photoURL: "",
+    storageRef: "",
+    userRef: "",
+    metadata: {
+      contentType: "image/jpeg",
+    },
   });
   const router = useRouter();
   const profileRef = useRef();
@@ -20,7 +26,7 @@ const Index = () => {
     if (file) {
       setState({
         ...state,
-        photoURL: file,
+        file: file,
       });
     }
   };
@@ -31,25 +37,75 @@ const Index = () => {
     });
   };
   const uploadImage = () => {
-    storageRef.put(state.photoURL).then(() => {
-      console.log('uploaded');
+    if (state.file != "") {
+      console.log("starting");
+      state.storageRef
+        .child(`avatars/user-${user.uid}`)
+        .put(state.file, state.metadata)
+        .then((snap) => {
+          snap.ref.getDownloadURL().then((downloadURL) => {
+           
+            
+            setState({
+              ...state, 
+              photoURL: downloadURL
+            })
+            updateAvatar(downloadURL)
+            updateUserList(downloadURL)
+            handleSubmit()
+          })
+          
+        })
+        .catch(err => {
+          console.error(err);
+        })
+
+      
+    }else{
+      handleSubmit()
+    }
+  };
+
+  const updateUserList = (url) => {
+    state.userRef
+      .child(user.uid)
+      .update({
+        avatar: url,
+        name: state.displayName
+      })
+      .then(() => {
+        console.log("successful");
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+  const updateAvatar = (url) => {
+    user.updateProfile({
+      photoURL: url
     })
-    console.log(state.photoURL.blob);
+    .then(() => {
+      console.log("avatar updated");
+    })
+    .catch((err) => {
+      console.error(err);
+    })
   }
   const handleSubmit = () => {
     user
       .updateProfile({
         displayName: state.displayName,
-        photoURL: state.photoURL
+        photoURL: state.photoURL,
       })
       .then(() => {
         console.log("updated");
-        router.push("/");
+        // router.push("/");
       })
       .catch((err) => {
         console.error(err);
       });
   };
+
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -58,7 +114,9 @@ const Index = () => {
         setState({
           ...state,
           displayName: user.displayName,
-          
+          storageRef: firebase.storage().ref(),
+          photoURL: user.photoURL,
+          userRef: firebase.database().ref("users")
         });
       } else {
         router.push("/login");
@@ -71,10 +129,19 @@ const Index = () => {
         <h2 className="title">Update Profile</h2>
         <p>Profile Image</p>
         <div
-          style={{ position: "relative", width: "fit-content" }}
+          style={{
+            position: "relative",
+            width: "fit-content",
+            cursor: "pointer",
+          }}
           onClick={handleClick}
         >
-          <img src={state.photoURL != "" ? URL.createObjectURL(state.photoURL) : user.photoURL} />
+          <img
+            src={
+              state.file != "" ? URL.createObjectURL(state.file) : user.photoURL
+              
+            }
+          />
           <img
             className="add-icon"
             src={require("../../public/assets/icons/plus.svg")}

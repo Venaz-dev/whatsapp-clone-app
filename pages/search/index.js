@@ -3,12 +3,13 @@ import firebase from "../../services/firebase";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-const Index = (user) => {
+const Index = () => {
+  const [user, setUser] = useState();
   const router = useRouter();
   const [state, setState] = useState({
     loading: false,
     convoRef: "",
-    error: "Enter a Username to search"
+    error: "",
   });
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
@@ -18,17 +19,37 @@ const Index = (user) => {
     setSearch(event.target.value);
   };
 
-  const searchUsers = () => {
-    setState({ ...state, loading: true });
+  const searchUsers = (event) => {
+    event.preventDefault()
+    setState({ ...state, loading: true, error: "" });
     let loadedUsers = [];
     usersRef.on("child_added", (snap) => {
-      loadedUsers.push(snap.val());
-      setUsers(
-        loadedUsers.filter((user) => {
-          return user.name.toLowerCase() === search.toLowerCase();
-        })
-      );
-    });
+      
+      if (user.uid != snap.val().id) {
+        loadedUsers.push(snap.val());
+        setUsers(
+          loadedUsers.filter((users) => {
+            return users.name.toLowerCase() === search.toLowerCase();
+          })
+        );
+      }
+      
+    })
+    // if (users.length < 1) {
+    //   console.log("damn");
+    //   setState({
+    //       ...state,
+    //       error: "No user with this Username Exists"
+    //     })
+    // }
+    // .then(() => {
+    //   if(users.length < 1){
+    //     setState({
+    //       ...state,
+    //       error: "No user with this Username Exists"
+    //     })
+    //   }
+    // });
     // console.log("users", users);
     setState({ ...state, loading: false });
   };
@@ -58,8 +79,8 @@ const Index = (user) => {
       .child(key)
       .update(newConvo)
       .then(() => {
-        console.log("convo added")
-        router.push("/")
+        console.log("convo added");
+        router.push("/");
       })
       .catch((err) => {
         console.error(err);
@@ -69,16 +90,24 @@ const Index = (user) => {
   const ErrorMsg = () => {
     return (
       <div>
-        
-          <h4>Enter a Username to search</h4>
-       
+        <h4>Enter a Username to search</h4>
       </div>
     );
   };
 
   useEffect(() => {
-    setState({ ...state, convoRef: firebase.database().ref("conversations") });
-    setUsersRef(firebase.database().ref("users"));
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+        setState({
+          ...state,
+          convoRef: firebase.database().ref("conversations"),
+        });
+        setUsersRef(firebase.database().ref("users"));
+      } else {
+        router.push("/login");
+      }
+    });
   }, []);
 
   return (
@@ -87,13 +116,14 @@ const Index = (user) => {
         <span className="close">[X]Close</span>
       </Link>
       <div className="search-input">
+        <form onSubmit={searchUsers}>
         <input
           type="text"
           placeholder="Search or start a new chat"
           value={search}
           onChange={handleChange}
         />
-        <button onClick={searchUsers} disabled={state.loading}>
+        <button disabled={state.loading}>
           {state.loading ? (
             <img
               className="loader"
@@ -103,11 +133,12 @@ const Index = (user) => {
             "Search"
           )}
         </button>
+        </form>
+        
       </div>
       <div className="search-result">
         {search != ""
-          ? 
-          users.map((user, i) => (
+          ? users.map((user, i) => (
               <div key={i} className="search-item">
                 <div className="user-details">
                   <div className="contact-avatar">
@@ -126,6 +157,9 @@ const Index = (user) => {
               </div>
             ))
           : ErrorMsg()}
+          
+            <h4 className="error">{state.error}</h4>
+          
       </div>
     </div>
   );

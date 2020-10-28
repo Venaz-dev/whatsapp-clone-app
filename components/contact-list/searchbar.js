@@ -18,6 +18,9 @@ const SearchBar = ({ signOut, user }) => {
     },
   ];
 
+  useEffect(() => {
+    console.log(user.photoURL);
+  }, [])
   return (
     <div className="search-bar-holder">
       <div className="user-details">
