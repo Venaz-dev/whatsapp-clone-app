@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Search from "../../public/assets/search";
 import send from "../../public/assets/icons/send_message.svg";
-import Spin from "../../public/assets/icons/loading_black.svg"
+import Spin from "../../public/assets/icons/loading_black.svg";
+import uuidv4 from "uuid/v4";
 
 import firebase from "../../services/firebase";
 import messages from "../../shared-data/contactdetails";
@@ -11,12 +12,14 @@ import TimeFormat from "../timeformat/timeformat";
 const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
   const chatRef = useRef();
   const imageRef = useRef();
+  const [imageView, setImageView] = useState("")
   const [modal, setModal] = useState(false);
   const [messages, setMessage] = useState([]);
   const [state, setState] = useState({
     messagesRef: firebase.database().ref("messages"),
     storageRef: firebase.storage().ref(),
     messagesLoading: false,
+    
     file: "",
     message: "",
     type: "",
@@ -27,12 +30,13 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
     errors: [],
   });
 
-  const scrollBottom = () => {
-    let chatDiv = chatRef.current;
-    chatDiv.scrollTop = chatDiv.scrollHeight;
+  const scrollBottom = (chat) => {
+    let chatDiv = chat.current;
+    chatDiv.scrollTop = chat.current.scrollHeight;
   };
 
   const addMessageListener = (convoReference) => {
+    let chat = chatRef
     let loadedMessages = [];
     state.messagesRef.child(convoReference).on("child_added", (snap) => {
       loadedMessages.push(snap.val());
@@ -41,6 +45,9 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(loadedMessages);
+        setMessage(loadedMessages)
+        scrollBottom(chat);
+
       }, 500);
     });
   };
@@ -49,11 +56,10 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
     // console.log("calling");
     state.messagesRef.child(convoReference).on("child_added", async () => {
       const result = await addMessageListener(convoReference);
-      setMessage(result);
-      scrollBottom();
+      // setMessage(result);
     });
     // console.log("result", result);
-    scrollBottom();
+    // scrollBottom();
   }
 
   const handleChange = (event) => {
@@ -84,7 +90,7 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
       messagesLoading: true,
     });
     state.storageRef
-      .child(`chat/public/${convoReference}/${state.file.name}`)
+      .child(`chat/public/${convoReference}/${uuidv4()}.jpg`)
       .put(state.file, state.metadata)
       .then((snap) => {
         snap.ref.getDownloadURL().then((downloadURL) => {
@@ -148,7 +154,7 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
           messagesLoading: false,
         });
         // console.log("sent");
-        scrollBottom();
+        // scrollBottom(chatRef);
         closeModal();
       })
       .catch((err) => {
@@ -168,7 +174,7 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
         .then(() => {
           setState({ ...state, message: "", errors: [] });
           // console.log("sent");
-          scrollBottom();
+          // scrollBottom(chatRef);
           // closeModal()
         })
         .catch((err) => {
@@ -214,6 +220,17 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
           </button>
         </div>
       )}
+      {/* {
+        state.view ? <div className="image-modal">
+          <span onClick={setImageView("")}>&#10005;</span>
+          <img
+            src={imageView}
+          />
+          <h2>{imageView}</h2>
+        </div>
+        :
+        null
+      } */}
       <div className="chat-area-header">
         <div className="contact-details">
           <div className="contact-avatar">
@@ -260,7 +277,7 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
                   msg.user.id === user.uid ? "message" : "message recieve"
                 }
               >
-                {msg.type === "text" ? msg.content : <img src={msg.content} />}
+                {msg.type === "text" ? msg.content : <img /*onClick={setImageView(msg.content)}*/ src={msg.content} />}
                 {/* {msg.message} */}
                 <TimeFormat time={day} />
               </div>
