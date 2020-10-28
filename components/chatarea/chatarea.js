@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Search from "../../public/assets/search";
 import send from "../../public/assets/icons/send_message.svg";
+import Spin from "../../public/assets/icons/loading_black.svg"
 
 import firebase from "../../services/firebase";
 import messages from "../../shared-data/contactdetails";
@@ -9,14 +10,22 @@ import TimeFormat from "../timeformat/timeformat";
 
 const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
   const chatRef = useRef();
+  const imageRef = useRef();
+  const [modal, setModal] = useState(false);
   const [messages, setMessage] = useState([]);
   const [state, setState] = useState({
     messagesRef: firebase.database().ref("messages"),
-    messagesLoading: true,
+    storageRef: firebase.storage().ref(),
+    messagesLoading: false,
+    file: "",
     message: "",
+    type: "",
+    imageURL: "",
+    metadata: {
+      contentType: "image/jpeg",
+    },
     errors: [],
   });
-  const username = "Venaz";
 
   const scrollBottom = () => {
     let chatDiv = chatRef.current;
@@ -39,10 +48,10 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
   async function getMessages() {
     // console.log("calling");
     state.messagesRef.child(convoReference).on("child_added", async () => {
-    const result = await addMessageListener(convoReference);
-    setMessage(result);
-    scrollBottom()
-    })
+      const result = await addMessageListener(convoReference);
+      setMessage(result);
+      scrollBottom();
+    });
     // console.log("result", result);
     scrollBottom();
   }
@@ -54,23 +63,98 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
     });
   };
 
+  const handleClick = () => {
+    imageRef.current.click();
+  };
+
+  const handleImage = (event) => {
+    let file = event.target.files[0];
+    if (file) {
+      setState({
+        ...state,
+        file: file,
+      });
+      setModal(!modal);
+    }
+  };
+
+  const uploadImage = () => {
+    setState({
+      ...state,
+      messagesLoading: true,
+    });
+    state.storageRef
+      .child(`chat/public/${convoReference}/${state.file.name}`)
+      .put(state.file, state.metadata)
+      .then((snap) => {
+        snap.ref.getDownloadURL().then((downloadURL) => {
+          setState({
+            ...state,
+            imageURL: downloadURL,
+          });
+          // updateAvatar(downloadURL)
+          // updateUserList(downloadURL)
+          // handleSubmit()
+          sendImage(downloadURL);
+        });
+      })
+
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // console.log("message", state.message, convoRef, user.displayName);
     sendMessage();
   };
 
-  const createMessage = () => {
+  const closeModal = () => {
+    setModal(false);
+    setState({
+      ...state,
+      file: "",
+    });
+  };
+
+  const createMessage = (data) => {
     const message = {
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       user: {
         id: user.uid,
         name: user.displayName,
-        avatar: user.photoURL,
       },
-      message: state.message,
+      content: data,
+      type: state.file === "" ? "text" : "image",
     };
+
     return message;
+  };
+
+  const sendImage = (data) => {
+    state.messagesRef
+      .child(convoReference)
+      .push()
+      .set(createMessage(data))
+      .then(() => {
+        setState({
+          ...state,
+          message: "",
+          type: "",
+          file: "",
+          imageURL: "",
+          errors: [],
+          messagesLoading: false,
+        });
+        // console.log("sent");
+        scrollBottom();
+        closeModal();
+      })
+      .catch((err) => {
+        console.error(err);
+        setState({ ...state, errors: state.errors.concat(err) });
+      });
   };
   const sendMessage = () => {
     const { message, messagesRef } = state;
@@ -80,11 +164,12 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
       messagesRef
         .child(convoReference)
         .push()
-        .set(createMessage())
+        .set(createMessage(message))
         .then(() => {
           setState({ ...state, message: "", errors: [] });
           // console.log("sent");
           scrollBottom();
+          // closeModal()
         })
         .catch((err) => {
           console.error(err);
@@ -110,6 +195,25 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
   }, [convoReference]);
   return (
     <div className="chat-area-container">
+      {modal && (
+        <div className="image-modal">
+          <span onClick={closeModal}>&#10005;</span>
+          <img
+            style={state.messagesLoading ? {opacity: 0.6} : null}
+            src={state.file != "" ? URL.createObjectURL(state.file) : null}
+          />
+          <button onClick={uploadImage}>
+            {state.messagesLoading ? (
+              <img
+                className="loader"
+                src={Spin}
+              />
+            ) : (
+              "Send"
+            )}
+          </button>
+        </div>
+      )}
       <div className="chat-area-header">
         <div className="contact-details">
           <div className="contact-avatar">
@@ -123,7 +227,7 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
                 />
               </button>
               {activeChat.avatar != "" && (
-                <img src={activeChat.avatar} alt="avatar" />
+                <img className="profile" src={activeChat.avatar} alt="avatar" />
               )}
 
               {activeChat.online ? (
@@ -156,7 +260,8 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
                   msg.user.id === user.uid ? "message" : "message recieve"
                 }
               >
-                {msg.message}
+                {msg.type === "text" ? msg.content : <img src={msg.content} />}
+                {/* {msg.message} */}
                 <TimeFormat time={day} />
               </div>
             </div>
@@ -166,6 +271,18 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
 
       {activeChat.username != "" && (
         <div className="chat-area-type">
+          <button onClick={handleClick}>
+            <img
+              src={require("../../public/assets/icons/upload-picture.svg")}
+              height={30}
+            />
+          </button>
+          <input
+            ref={imageRef}
+            type="file"
+            onChange={handleImage}
+            style={{ display: "none" }}
+          />
           <form onSubmit={handleSubmit} autoComplete="off">
             <input
               type="text"
@@ -175,7 +292,7 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
               placeholder="Type a message"
             />
             {/* <span className="input" contentEditable={true} value={message} onChange={handleChange}
-        ></span> */}
+            ></span> */}
 
             <button className="send-btn" disabled={state.message === ""}>
               <img src={send} />

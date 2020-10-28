@@ -3,6 +3,52 @@
     min-height: 100vh;
     position: relative;
 
+    .image-modal{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        width: 100%;
+        height: 100%;
+        background-color: #333333ea;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        img{
+            max-width: 60%;
+            max-height: 80%;
+            border-radius: 20px;
+        }
+        button{
+            position: absolute;
+            background-color: $primary;
+            color: #ffffff;
+            font-size: 20px;
+            // height: 50px;
+            width: 100px;
+            padding: 10px 25px;
+            bottom: 10%;
+            border-radius: 10px;
+            margin-top: 20px;
+            .loader {
+                height: 30px;
+                width: 30px;
+                animation-name: spin;
+                animation-duration: 3000ms;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+            }
+        }
+        span{
+            position: absolute;
+            top: 5%;
+            right: 10%;
+            font-size: 30px;
+            color:#ffffff48;
+        }
+    }
+
     .chat-area-header {
         .back-btn {
             display: none;
@@ -32,13 +78,20 @@
                 align-items: center;
                 position: relative;
                 margin-right: 20px;
+                
 
                 img {
                     margin: 0;
                     height: 50px;
                     width: 50px;
                     border-radius: 50%;
+                    
                 }
+                .profile{
+                    object-fit: cover;
+                    object-position: top;
+                }
+                
 
                 .online-status {
                     // display: none;
@@ -137,6 +190,11 @@
                 bottom: auto;
                 border: 15px solid;
                 border-color: #155c27 transparent transparent transparent;
+            }
+            img{
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
             }
         }
         

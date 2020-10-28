@@ -30,7 +30,15 @@ const Login = ({ signup }) => {
   };
 
   const displayErrors = (errors) => {
-    errors.map((error, i) => <h4 className="errors" key={i}>{error.message}</h4>);
+    
+    // errors.map((error, i) => 
+    if(errors.length != 0){
+      return(
+      <h4 className="errors" >{errors[0].message}</h4>
+      )
+    }
+   
+    // );
   
     // console.log('hi', errors[0].message)
   };
@@ -47,27 +55,32 @@ const Login = ({ signup }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (isFormValid(state)) {
-      setState({ ...state, errors: [], loading: true });
-
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(state.email, state.password)
-        .then((signedInUser) => {
-          // console.log(signedInUser);
-          setUser(firebase.auth().currentUser);
-          router.push("/")
-        })
-        .catch((err) => {
-          console.error(err);
-          setState({
-            ...state,
-            errors: state.errors.concat(err),
-            loading: false,
+    
+   
+      if (isFormValid(state)) {
+        setState({ ...state, errors: [], loading: true });
+  
+        firebase
+          .auth()
+          .signInWithEmailAndPassword(state.email, state.password)
+          .then((signedInUser) => {
+            // console.log(signedInUser);
+            setUser(firebase.auth().currentUser);
+            router.push("/")
+          })
+          .catch((err) => {
+            console.error(err);
+            setState({
+              ...state,
+              errors: state.errors.concat(err),
+              loading: false,
+            });
           });
-        });
-    }
+      }
+    
+    
   };
+  
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -117,13 +130,13 @@ const Login = ({ signup }) => {
               // : null
               // <div><h4 className="errors">hhhhh</h4></div>
             }
-            {state.errors.length > 0 &&
+            {/* {state.errors.length > 0 &&
               state.errors.map((error, i) => (
                 <h4 className="errors" key={i}>
                   {" "}
                   {error.message}{" "}
                 </h4>
-              ))}
+              ))} */}
 
             <button
               disabled={state.loading}
