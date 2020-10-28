@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Search from "../../public/assets/search";
 import send from "../../public/assets/icons/send_message.svg";
 import Spin from "../../public/assets/icons/loading_black.svg";
-import uuidv4 from "uuid/v4";
+import {uuid} from "uuidv4";
 
 import firebase from "../../services/firebase";
 import messages from "../../shared-data/contactdetails";
@@ -90,7 +90,7 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
       messagesLoading: true,
     });
     state.storageRef
-      .child(`chat/public/${convoReference}/${uuidv4()}.jpg`)
+      .child(`chat/public/${convoReference}/${uuid()}.jpg`)
       .put(state.file, state.metadata)
       .then((snap) => {
         snap.ref.getDownloadURL().then((downloadURL) => {
@@ -276,8 +276,9 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
                 className={
                   msg.user.id === user.uid ? "message" : "message recieve"
                 }
+                onClick={setImageView(msg.content)}
               >
-                {msg.type === "text" ? msg.content : <img /*onClick={setImageView(msg.content)}*/ src={msg.content} />}
+                {msg.type === "text" ? msg.content : <img  src={msg.content} />}
                 {/* {msg.message} */}
                 <TimeFormat time={day} />
               </div>
