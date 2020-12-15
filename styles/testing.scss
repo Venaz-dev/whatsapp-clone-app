@@ -6,8 +6,16 @@
     .mockups {
         width: 100%;
         height: 50vh;
-        background-color: #30033000;
+        // background-color: #30033000;
         position: relative;
+        transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+        img{
+            height: 100%;
+            
+            &:hover{
+                width: 100%;
+            }
+        }
 
         &:hover {
             div {

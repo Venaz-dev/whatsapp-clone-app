@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Search from "../../public/assets/search";
 import { Dropdown } from "semantic-ui-react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import store from "../../store/store";
+import { useProxy } from "valtio";
 
-const SearchBar = ({ signOut, user }) => {
+const SearchBar = ({ signOut }) => {
   const router = useRouter();
+  const snapshot = useProxy(store);
   const [drop, setDrop] = useState(false);
+  const conmponentRef = useRef()
   const dropdownOptions = () => [
     {
       key: "signout",
@@ -18,9 +22,23 @@ const SearchBar = ({ signOut, user }) => {
     },
   ];
 
+  const handleClickOutside = (event) => {
+    if (
+      conmponentRef.current &&
+      !conmponentRef.current.contains(event.target)
+    ) {
+      setDrop(false);
+    }
+  }
+
   useEffect(() => {
-    console.log(user.photoURL);
-  }, [])
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <div className="search-bar-holder">
       <div className="user-details">
@@ -28,8 +46,8 @@ const SearchBar = ({ signOut, user }) => {
           <div className={`status-ring no-status`}>
             <img
               src={
-                user.photoURL != null
-                  ? user.photoURL
+                snapshot.user?.photoURL
+                  ? snapshot.user?.photoURL
                   : require("../../public/assets/new_profile.png")
               }
               alt="avatar"
@@ -38,7 +56,7 @@ const SearchBar = ({ signOut, user }) => {
 
           <p className="online-status">&bull;</p>
         </div>
-        <p>{user.displayName}</p>
+        <p>{snapshot.user.displayName}</p>
       </div>
 
       <Link href="/search">
@@ -49,7 +67,7 @@ const SearchBar = ({ signOut, user }) => {
       </Link>
 
       {drop ? (
-        <div className="dropdown">
+        <div className="dropdown" ref={conmponentRef}>
           <Link href="/profile">
             <div>Profile</div>
           </Link>

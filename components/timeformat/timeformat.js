@@ -3,8 +3,21 @@ import React from "react";
 const TimeFormat = ({ time }) => {
   let hours = time.getHours();
   let minutes = time.getMinutes();
-  let day = time.getDay();
-  let today = new Date().getDay();
+  let isToday = time.getDay()
+  let day = time.getTime();
+  let today = new Date().getTime();
+
+  let difference = today - day;
+ 
+  let seconds = Math.floor(difference / 1000);
+  let defminutes = Math.floor(seconds / 60);
+  let defhours = Math.floor(defminutes / 60);
+  let days = Math.floor(defhours / 24);
+  let month = Math.floor(days / 30)
+
+  defhours %= 24;
+  defminutes %= 60;
+  seconds %= 60;
 
   const formatHours = () => {
     if (hours >= 10) {
@@ -22,12 +35,12 @@ const TimeFormat = ({ time }) => {
     }
   };
   const formatMinutes = () => {
-      if(minutes < 10){
-          return `0${minutes}`
-      }else{
-          return minutes
-      }
-  }
+    if (minutes < 10) {
+      return `0${minutes}`;
+    } else {
+      return minutes;
+    }
+  };
 
   return (
     <div
@@ -39,9 +52,13 @@ const TimeFormat = ({ time }) => {
         right: "10px",
       }}
     >
-      {day != today ? (
+      {isToday != new Date().getDay() ? (
         <p style={{ margin: 0 }}>
-          {today - day} day{today - day > 1 && "s"} ago.
+          {
+            days < 30 ? `${days} day${days > 1 && "s"} ago.`
+            :  month + " month"+ " ago"
+          }
+          
         </p>
       ) : (
         <p style={{ margin: 0 }}>

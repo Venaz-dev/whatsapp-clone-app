@@ -17,6 +17,14 @@
     .user-details{
         border-bottom: unset !important;
         padding: unset !important;
+        display: flex;
+        .online-status{
+            font-size: 50px;
+        }
+        p{
+            margin-left: 20px;
+            font-size: 20px;
+        }
     }
     .search{
         display: flex;

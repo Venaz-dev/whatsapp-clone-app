@@ -69,6 +69,9 @@ select:-webkit-autofill:focus {
 .form-holder {
     width: 50%;
     height: auto;
+    .error{
+        color: #f31515
+    }
 }
 
 .form-holder h1 {
@@ -190,7 +193,8 @@ select:-webkit-autofill:focus {
     border-radius: 15px;
     border: none;
     font-size: 16px;
-    background-color: #00CC71;
+    background-color: $primary;
+    color: #000000;
     cursor: pointer;
 }
 

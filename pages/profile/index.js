@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import firebase from "../../services/firebase";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import store from "../../store/store";
+import Layout from "../../components/layout";
 
 const Index = () => {
   // const storageRef = firebase.storage().ref() || "";
@@ -37,6 +39,7 @@ const Index = () => {
     });
   };
   const uploadImage = () => {
+    store.loading = true;
     if (state.file != "") {
       console.log("starting");
       state.storageRef
@@ -44,32 +47,25 @@ const Index = () => {
         .put(state.file, state.metadata)
         .then((snap) => {
           snap.ref.getDownloadURL().then((downloadURL) => {
-           
-            
             setState({
-              ...state, 
-              photoURL: downloadURL
-            })
-            updateAvatar(downloadURL)
-            updateUserList(downloadURL)
-            handleSubmit()
-          })
-          
+              ...state,
+              photoURL: downloadURL,
+            });
+            updateAvatar(downloadURL);
+            updateUserList(downloadURL);
+            handleSubmit();
+          });
         })
         .then(() => {
-          console.log("redirect");
-          setTimeout(() => {
-            router.push("/")
-          }, 3000);
-          
+          router.push("/");
+          store.loading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
-        })
-
-      
-    }else{
-      handleSubmit()
+          store.loading = false;
+        });
+    } else {
+      handleSubmit();
     }
   };
 
@@ -78,26 +74,27 @@ const Index = () => {
       .child(user.uid)
       .update({
         avatar: url,
-        name: state.displayName
+        name: state.displayName,
       })
       .then(() => {
         console.log("successful");
       })
       .catch((err) => {
         console.error(err);
-      })
-  }
+      });
+  };
   const updateAvatar = (url) => {
-    user.updateProfile({
-      photoURL: url
-    })
-    .then(() => {
-      console.log("avatar updated");
-    })
-    .catch((err) => {
-      console.error(err);
-    })
-  }
+    user
+      .updateProfile({
+        photoURL: url,
+      })
+      .then(() => {
+        console.log("avatar updated");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   const handleSubmit = () => {
     user
       .updateProfile({
@@ -106,13 +103,14 @@ const Index = () => {
       })
       .then(() => {
         console.log("updated");
-        // router.push("/");
+        store.loading = false;
+        router.push("/");
       })
       .catch((err) => {
         console.error(err);
+        store.loading = false;
       });
   };
-
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
@@ -123,7 +121,7 @@ const Index = () => {
           displayName: user.displayName,
           storageRef: firebase.storage().ref(),
           photoURL: user.photoURL,
-          userRef: firebase.database().ref("users")
+          userRef: firebase.database().ref("users"),
         });
       } else {
         router.push("/login");
@@ -131,46 +129,53 @@ const Index = () => {
     });
   }, []);
   return user ? (
-    <div className="profile-holder">
-      <div>
-        <h2 className="title">Update Profile</h2>
-        <p>Profile Image</p>
-        <div
-          style={{
-            position: "relative",
-            width: "fit-content",
-            cursor: "pointer",
-          }}
-          onClick={handleClick}
-        >
-          <img
-            src={
-              state.file != "" ? URL.createObjectURL(state.file) : user.photoURL
-              
-            }
-          />
-          <img
-            className="add-icon"
-            src={require("../../public/assets/icons/plus.svg")}
-          />
+    <Layout>
+      <div className="profile-holder">
+        <div>
+          <h2 className="title">Update Profile</h2>
+          <p>Profile Image</p>
+          <div
+            style={{
+              position: "relative",
+              width: "fit-content",
+              cursor: "pointer",
+            }}
+            onClick={handleClick}
+          >
+            <img
+              src={
+                state.file != ""
+                  ? URL.createObjectURL(state.file)
+                  : user.photoURL
+              }
+            />
+            <img
+              className="add-icon"
+              src={require("../../public/assets/icons/plus.svg")}
+            />
+            <input
+              style={{ display: "none" }}
+              ref={profileRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImage}
+            />
+          </div>
+          <p>Username</p>
           <input
-            style={{ display: "none" }}
-            ref={profileRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImage}
+            type="text"
+            value={state.displayName}
+            onChange={handleChange}
           />
-        </div>
-        <p>Username</p>
-        <input type="text" value={state.displayName} onChange={handleChange} />
-        <div className="btn-holder">
-          <button onClick={uploadImage}>Update</button>
-          <Link href="/">
-            <button style={{ backgroundColor: "#E76E54" }}>Cancel</button>
-          </Link>
+          <div className="btn-holder">
+            <button onClick={uploadImage}>Update</button>
+            <Link href="/">
+              <button style={{ backgroundColor: "#E76E54" }}>Cancel</button>
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </Layout>
   ) : null;
 };
 

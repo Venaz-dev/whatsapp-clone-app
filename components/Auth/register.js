@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "../../services/firebase";
-
+import store from "../../store/store";
 
 const Register = ({ login }) => {
-  const storage = firebase.storage()
-  let profilePath = storage.refFromURL('https://firebasestorage.googleapis.com/v0/b/dev-chat-9be95.appspot.com/o/new_profile.png?alt=media&token=5e614ba2-60d2-44d9-9678-c6b3125b128b');
+  const storage = firebase.storage();
+  const [userNames, setUserNames] = useState([]);
+  let profilePath = storage.refFromURL(
+    "https://firebasestorage.googleapis.com/v0/b/dev-chat-9be95.appspot.com/o/new_profile.png?alt=media&token=5e614ba2-60d2-44d9-9678-c6b3125b128b"
+  );
 
   const [state, setState] = useState({
     username: "",
@@ -14,7 +17,31 @@ const Register = ({ login }) => {
     errors: [],
     loading: false,
     usersRef: firebase.database().ref("users"),
+    userNameRef: firebase.database().ref("usernames"),
+    userExists: false,
   });
+
+  const getUsername = () => {
+    let usernames = [];
+    firebase
+      .database()
+      .ref("usernames")
+      .on("child_added", (snap) => {
+        usernames.push(snap.val());
+        setUserNames([...usernames]);
+      });
+    console.log("users", usernames);
+  };
+
+  const checkUsername = () => {
+    let users = userNames.filter((user) => user.username === state.username.toLowerCase());
+    console.log(users);
+    if (users.length !== 0) {
+      setState({ ...state, userExists: true });
+    } else {
+      setState({ ...state, userExists: false });
+    }
+  };
 
   const handleChange = (event) => {
     setState({
@@ -52,11 +79,21 @@ const Register = ({ login }) => {
       {
         name: createdUser.user.displayName,
         avatar: createdUser.user.photoURL,
-        id: createdUser.user.uid
+        id: createdUser.user.uid,
       },
       console.log("added user")
     );
   };
+
+  const saveUsername = (createdUser) => {
+    return state.userNameRef.child(createdUser.user.uid).set(
+      {
+        username: createdUser.user.displayName,
+        
+      },
+      console.log("added user")
+    );
+  }
 
   const isFormEmpty = ({ username, email, password, passwordConfirmation }) => {
     return (
@@ -89,6 +126,7 @@ const Register = ({ login }) => {
     ));
 
   const handleSubmit = (event) => {
+    store.loading = true;
     event.preventDefault();
     console.log(state);
     if (isFormValid()) {
@@ -99,7 +137,7 @@ const Register = ({ login }) => {
         .then((createdUser) => {
           createdUser.user
             .updateProfile({
-              displayName: state.username,
+              displayName: state.username.toLowerCase(),
               photoURL: `https://firebasestorage.googleapis.com/v0/b/dev-chat-9be95.appspot.com/o/new_profile.png?alt=media&token=5e614ba2-60d2-44d9-9678-c6b3125b128b`,
             })
             .then(() => {
@@ -107,6 +145,10 @@ const Register = ({ login }) => {
               saveUser(createdUser).then(() => {
                 console.log("user saved");
               });
+              saveUsername(createdUser).then(() => {
+                console.log("username saved");
+              });
+              store.loading = false;
             })
             .catch((err) => {
               console.error(err);
@@ -115,6 +157,7 @@ const Register = ({ login }) => {
                 errors: state.errors.concat(err),
                 loading: false,
               });
+              store.loading = false;
             });
         })
         .catch((err) => {
@@ -123,9 +166,20 @@ const Register = ({ login }) => {
             errors: state.errors.concat(err),
             loading: false,
           });
+          store.loading = false;
         });
+    } else {
+      store.loading = false;
     }
   };
+
+  useEffect(() => {
+    getUsername();
+  }, []);
+
+  useEffect(() => {
+    checkUsername();
+  }, [state.username])
 
   return (
     <div className="register-container">
@@ -151,9 +205,12 @@ const Register = ({ login }) => {
                 name="username"
                 placeholder="Username"
                 onChange={handleChange}
-                value={state.username}  
+                value={state.username}
               />
             </div>
+            {state.userExists ? (
+              <p className="error">Username already exists.</p>
+            ) : null}
             <div className="input-holder email icon">
               <input
                 type="email"
@@ -186,9 +243,7 @@ const Register = ({ login }) => {
               <div>{displayErrors(state.errors)}</div>
             )}
 
-            <button disabled={state.loading} className="submit-btn">
-              Register
-            </button>
+            <button className="submit-btn">Register</button>
           </form>
 
           <h5>
