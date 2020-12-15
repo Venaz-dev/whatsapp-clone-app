@@ -2,10 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import Search from "../../public/assets/search";
 import send from "../../public/assets/icons/send_message.svg";
 import Spin from "../../public/assets/icons/loading_black.svg";
+<<<<<<< HEAD
 import closeIcon from "../../public/assets/icons/close_white.svg";
 import { uuid } from "uuidv4";
 import store from "../../store/store";
 import { useProxy } from "valtio";
+=======
+import {uuid} from "uuidv4";
+
+>>>>>>> b603f2d34d11dd6af31504e7723d3f875a358d5b
 import firebase from "../../services/firebase";
 import messages from "../../shared-data/contactdetails";
 
@@ -15,13 +20,13 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
   const snapshot = useProxy(store);
   const chatRef = useRef();
   const imageRef = useRef();
-
   const [modal, setModal] = useState(false);
   const [loadedMessages, setMessage] = useState([]);
   const [state, setState] = useState({
     messagesRef: firebase.database().ref("messages"),
     storageRef: firebase.storage().ref(),
     messagesLoading: false,
+    
     file: "",
     message: "",
     type: "",
@@ -146,7 +151,11 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
           messagesLoading: false,
         });
         // console.log("sent");
+<<<<<<< HEAD
 
+=======
+        // scrollBottom(chatRef);
+>>>>>>> b603f2d34d11dd6af31504e7723d3f875a358d5b
         closeModal();
       })
       .catch((err) => {
@@ -166,6 +175,10 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
         .then(() => {
           setState({ ...state, message: "", errors: [] });
           // console.log("sent");
+<<<<<<< HEAD
+=======
+          // scrollBottom(chatRef);
+>>>>>>> b603f2d34d11dd6af31504e7723d3f875a358d5b
           // closeModal()
         })
         .catch((err) => {
@@ -210,6 +223,54 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
           </button>
         </div>
       )}
+<<<<<<< HEAD
+=======
+      {/* {
+        state.view ? <div className="image-modal">
+          <span onClick={setImageView("")}>&#10005;</span>
+          <img
+            src={imageView}
+          />
+          <h2>{imageView}</h2>
+        </div>
+        :
+        null
+      } */}
+      <div className="chat-area-header">
+        <div className="contact-details">
+          <div className="contact-avatar">
+            <div /*className={`status-ring ${msg.online ? null : "no-status"}`}*/
+            >
+              <button className="back-btn" onClick={closeChat}>
+                <img
+                  src={require("../../public/assets/icons/left-arrow.svg")}
+                  height={20}
+                  width={20}
+                />
+              </button>
+              {activeChat.avatar != "" && (
+                <img className="profile" src={activeChat.avatar} alt="avatar" />
+              )}
+
+              {activeChat.online ? (
+                <p className="online-status">&bull;</p>
+              ) : null}
+            </div>
+          </div>
+
+          <p className="display-name">{activeChat.username}</p>
+        </div>
+        <div className="icons">
+          <div className="search-icon">
+            <Search color="#ffffff" />
+          </div>
+          <div className="dot-icon">
+            <img src={require("../../public/assets/icons/dot_menu.svg")} />
+          </div>
+        </div>
+      </div>
+
+>>>>>>> b603f2d34d11dd6af31504e7723d3f875a358d5b
       {/* container for the messages */}
       <div className="chat-messages" id="messages" ref={chatRef}>
         {loadedMessages.map((msg, i) => {
@@ -223,7 +284,9 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
                     ? `message ${msg.type !== "text" && "image-msg"}`
                     : `message ${msg.type !== "text" && "image-msg"} recieve`
                 }
+                onClick={setImageView(msg.content)}
               >
+<<<<<<< HEAD
                 {msg.type === "text" ? (
                   msg.content
                 ) : (
@@ -233,6 +296,10 @@ const ChatArea = ({ closeChat, activeChat, user, convoReference }) => {
                   />
                 )}
 
+=======
+                {msg.type === "text" ? msg.content : <img  src={msg.content} />}
+                {/* {msg.message} */}
+>>>>>>> b603f2d34d11dd6af31504e7723d3f875a358d5b
                 <TimeFormat time={day} />
               </div>
             </div>
